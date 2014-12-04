@@ -19,6 +19,30 @@ var socketHandler = {
 
   sendMessage: function(message) {
     socket.emit('message_from_client', message);
+  },
+
+  // test the server
+  test: function() {
+    setTimeout(
+      function() {
+        socket.emit('test_client', 'aaa');
+      },
+      1000
+    );
+
+    setTimeout(
+      function() {
+        socket.emit('test_client', 'bbb');
+      },
+      2000
+    );
+
+    setTimeout(
+      function() {
+        socket.emit('test_client', 'ccc');
+      },
+      3000
+    );
   }
 };
 

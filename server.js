@@ -22,5 +22,9 @@ io.on('connection', function(socket) {
 
   socket.on('message_from_client', function(message) {
     io.emit('message_from_server', createMessage(message.text));
-  })
+  });
+
+  socket.on('test_client', function(str) {
+    io.emit('message_from_server', createMessage(str));
+  });
 });
