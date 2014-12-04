@@ -4,9 +4,11 @@ var headers = {
     'Content-Type':     'application/json'
 };
 
+var base_url = "http://localhost:8000"
+
 // Configure the request
 var options = {
-    url: 'http://localhost:8000/api/private/death',
+    url: base_url + '/api/private/death',
     method: 'POST',
     headers: headers,
     form: {'killer': 'Paul', 'killed': ''}
@@ -33,7 +35,10 @@ var options = {
         request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 // Print out the response body
-                console.log(body)
+                console.log(body);
+            }
+            else {
+                console.log(error);
             }
         })
 
@@ -51,4 +56,19 @@ var options = {
         
       },
       3000);
+
+    setTimeout(function() {
+        options.form = {};
+        options.form.player = 'Eric';
+        options.form.class = 'Programmer'
+        options.url = base_url + '/api/private/respawn'
+        request(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                // Print out the response body
+                console.log(body)
+            }
+        })
+        
+      },
+      4000);
 })();

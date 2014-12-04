@@ -10,7 +10,7 @@ app.use(bodyParser());
 
 
 var _messages = [
-  {text: 'Hi', id: 0}
+  {text: 'Welcome to team fortress 2 Stream!', id: 0}
 ];
 
 // should eventually be removed
@@ -26,7 +26,6 @@ app.use('/', express.static(__dirname));
 
 io.on('connection', function(socket) {
   socket.emit('messages_from_server', _messages);
-  // test
 
   socket.on('message_from_client', function(message) {
     io.emit('message_from_server', createMessage(message.text));
@@ -42,20 +41,34 @@ app.post('/api/private/bootstrap', function(req, res) {
 });
 
 app.post('/api/private/death', function(req, res) {
-  console.log(req.body);
   io.emit('message_from_server', createMessage(req.body.killer + ' has killed ' + req.body.killed))
+
   res.json(_errors);
 });
 
 app.post('/api/private/respawn', function(req, res) {
+  var _errors = [];
+  var _player = req.body.player;
+  var _class = req.body.class;
+
+  io.emit('message_from_server', createMessage(_player + ' has respawned as a '+_class));
+
   res.json(_errors);
 });
 
 app.post('/api/private/connected', function(req, res) {
+  var _player = req.body.player;
+
+  io.emit('message_from_server', createMessage(_player + ' has connected'));
+
   res.json(_errors);
 });
 
 app.post('/api/private/disconnected', function(req, res) {
+  var _player = req.body.player;
+
+  io.emit('message_from_server', createMessage(_player + ' has disconnected'));
+
   res.json(_errors);
 });
 
