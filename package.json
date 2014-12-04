@@ -1,0 +1,27 @@
+{
+  "name": "realtime-chat",
+  "version": "0.0.1",
+  "description": "Example Real Time Chat using Socket IO and Flux",
+  "main": "js/app.js",
+  "dependencies": {
+    "browserify": "^6.3.2",
+    "express": "^4.10.2",
+    "flux": "^2.0.1",
+    "react": "^0.12.1",
+    "reactify": "^0.17.0",
+    "socket.io": "^1.2.0",
+    "socket.io-client": "^1.2.0",
+    "supervisor": "^0.6.0",
+    "watchify": "^2.1.1"
+  },
+  "scripts": {
+    "watch": "watchify -o js/bundle.js -v -d .",
+    "watch-server": "supervisor server.js",
+    "start": "npm run watch & npm run watch-server"
+  },
+  "browserify": {
+    "transform": [
+      "reactify"
+    ]
+  }
+}
