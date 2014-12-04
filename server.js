@@ -13,6 +13,21 @@ var _messages = [
   {text: 'Welcome to team fortress 2 Stream!', id: 0}
 ];
 
+function getTeam(teamNum) {
+  switch(teamNum) {
+    case -1:
+      return 'tie';
+    case 0:
+      return 'red';
+    case 1:
+      return 'blue';
+    case 2:
+      return 'spectator';
+    default:
+      return 'error';
+  }
+}
+
 // should eventually be removed
 var _errors = [];
 
@@ -41,7 +56,17 @@ app.post('/api/private/bootstrap', function(req, res) {
 });
 
 app.post('/api/private/death', function(req, res) {
-  io.emit('message_from_server', createMessage(req.body.killer + ' has killed ' + req.body.killed))
+  var _victim = req.body.victim;
+  var _attacker = req.body.attacker;
+  var _assister = req.body.assister;
+  var _weapon = req.body.weapon;
+  var _death_type = req.body.death_type;
+
+  io.emit('message_from_server', createMessage(_attacker + ' has killed ' + 
+                                              _victim + ' with ' +
+                                              _weapon + 'by'
+                                              _death_type + ' assisted by ' +
+                                              _assister);
 
   res.json(_errors);
 });
@@ -73,6 +98,11 @@ app.post('/api/private/disconnected', function(req, res) {
 });
 
 app.post('/api/private/teamswitch', function(req, res) {
+  var _player = req.body.player;
+  var _team = getTeam(req.body.team);
+
+  io.emit('message_from_server', createMessage(_player + ' has switched to the '+_team+' team'));
+
   res.json(_errors);
 });
 
@@ -81,5 +111,9 @@ app.post('/api/private/playerscores', function(req, res) {
 });
 
 app.post('/api/private/roundover', function(req, res) {
+  var _winning_team = getTeam(req.body.winning_team);
+  var _red_score = req.body.red_score;
+  var _blue_score = req.body.blue_score;
+
   res.json(_errors);
 });
