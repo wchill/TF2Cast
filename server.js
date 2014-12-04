@@ -14,6 +14,7 @@ var _messages = [
 ];
 
 function getTeam(teamNum) {
+  teamNum = +teamNum;
   switch(teamNum) {
     case -1:
       return 'tie';
@@ -64,10 +65,9 @@ app.post('/api/private/death', function(req, res) {
 
   io.emit('message_from_server', createMessage(_attacker + ' has killed ' + 
                                               _victim + ' with ' +
-                                              _weapon + 'by'
+                                              _weapon + ' by ' +
                                               _death_type + ' assisted by ' +
-                                              _assister);
-
+                                              _assister));
   res.json(_errors);
 });
 

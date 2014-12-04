@@ -8,10 +8,10 @@ var base_url = "http://localhost:8000"
 
 // Configure the request
 var options = {
-    url: base_url + '/api/private/death',
+    url: '',
     method: 'POST',
     headers: headers,
-    form: {'killer': 'Paul', 'killed': ''}
+    form: {}
 };
 
 // Start the request
@@ -19,11 +19,21 @@ var options = {
 
 (function() {
     setTimeout(function() {
-        options.form.killed = 'one person';
+        options.form = {
+            attacker: 'Paul',
+            victim: 'everyone',
+            assister: 'nobody',
+            weapon: 'code',
+            death_type: 'hacked'
+        }
+        options.url = base_url + '/api/private/death';
         request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 // Print out the response body
-                console.log(body)
+                console.log(body);
+            }
+            else {
+                console.log(error);
             }
         })
 
@@ -31,7 +41,11 @@ var options = {
       1000);
 
     setTimeout(function() {
-        options.form.killed = 'two people';
+        options.form = {
+            player: 'Eric',
+            class: 'Programmer'
+        }
+        options.url = base_url + '/api/private/respawn';
         request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 // Print out the response body
@@ -46,7 +60,10 @@ var options = {
       2000);
 
     setTimeout(function() {
-        options.form.killed = 'all the people';
+        options.form = {
+            player: 'Josh'
+        };
+        options.url = base_url + '/api/private/connected';
         request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 // Print out the response body
@@ -58,10 +75,10 @@ var options = {
       3000);
 
     setTimeout(function() {
-        options.form = {};
-        options.form.player = 'Eric';
-        options.form.class = 'Programmer'
-        options.url = base_url + '/api/private/respawn'
+        options.form = {
+            player: 'Michael'
+        };
+        options.url = base_url + '/api/private/disconnected';
         request(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 // Print out the response body
@@ -71,4 +88,38 @@ var options = {
         
       },
       4000);
+
+    setTimeout(function() {
+        options.form = {
+            player: 'Bhuwan',
+            team: 0
+        };
+        options.url = base_url + '/api/private/teamswitch';
+        request(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                // Print out the response body
+                console.log(body)
+            }
+        })
+        
+      },
+      5000);
+
+    setTimeout(function() {
+        options.form = {
+            red_score: 10,
+            blue_score: 2,
+            // Bhuwan too good
+            winning_team: 0
+        };
+        options.url = base_url + '/api/private/roundover';
+        request(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                // Print out the response body
+                console.log(body)
+            }
+        })
+        
+      },
+      6000);
 })();
