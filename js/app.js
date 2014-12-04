@@ -10,4 +10,3 @@ React.render(
 );
 
 socketHandler.init();
-socketHandler.test();
