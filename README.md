@@ -9,4 +9,4 @@ Requires:
 * Node.js  
 * Socket.io (npm install socket.io)  
 * [SourceMod](http://www.sourcemod.net/) (compiled against latest build of SourceMod 1.7, may work on lower versions)  
-* [cURL for SourceMod](https://github.com/wchill/sm-ext-socket)  
+* [SMJansson](https://forums.alliedmods.net/showthread.php?t=184604)
