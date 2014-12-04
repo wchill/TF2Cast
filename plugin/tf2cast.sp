@@ -1,6 +1,7 @@
 #pragma semicolon 1
 #include <sourcemod>
 #include <steamtools>
+#include <smjansson>
 
 public Plugin:myinfo = {
     name = "TF2 Live Cast",
@@ -20,8 +21,10 @@ public OnPluginStart() {
     HookEvent("player_team", Event_PlayerChangeTeam, EventHookMode_Post);
 }
 
-SendRequest() {
-    new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, "http://www.example.com"); // Create the HTTP request
+PostRequest(const String:endpoint, const String:data) {
+    decl String:url[255];
+    Format(url, sizeof(url), "http://tf2.intense.io/api/private/%s", endpoint);
+    new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, url); // Create the HTTP request
     Steam_SetHTTPRequestGetOrPostParameter(request, "herp", "derp"); // Set post param "herp" value to "derp"
     Steam_SendHTTPRequest(request, OnRequestComplete); // Send the request
 }
@@ -38,6 +41,19 @@ public Action:Event_PlayerConnect(Handle:event, const String:name[], bool:dontBr
     new bot;
     GetEventInt(event, "bot", bot); 
     PrintToServer("[DEBUG] Player %s connected (%s, %d)", playername, networkid, bot);
+
+    decl String:url[255];
+    decl String:endpoint[] = "connected";
+    Format(url, sizeof(url), "http://tf2.intense.io/api/private/%s", endpoint);
+    new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, url); // Create the HTTP request
+    if(bot) {
+        // bots don't have a Steam ID, so just send their name
+        Steam_SetHTTPRequestGetOrPostParameter(request, "player", playername);
+    } else {
+        // Send the player's Steam ID
+        Steam_SetHTTPRequestGetOrPostParameter(request, "player", networkid);
+    }
+    Steam_SendHTTPRequest(request, OnRequestComplete); // Send the request
 }
 
 public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast) {
@@ -99,6 +115,5 @@ public Action:Event_PlayerChangeTeam(Handle:event, const String:name[], bool:don
 public OnRequestComplete(HTTPRequestHandle:request, bool:successful, HTTPStatusCode:status) {
     decl String:response[1024];
     Steam_GetHTTPResponseBodyData(request, response, sizeof(response)); // Get the response from the server
-    PrintToServer("Response: %s", response);
     Steam_ReleaseHTTPRequest(request); // Close the handle
 }  
