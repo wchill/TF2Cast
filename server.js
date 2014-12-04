@@ -48,25 +48,31 @@ app.post('/api/private/death', function(req, res) {
 });
 
 app.post('/api/private/respawn', function(req, res) {
+  console.log(req.body);
   res.json(_errors);
 });
 
 app.post('/api/private/connected', function(req, res) {
+  console.log(req.body);
   res.json(_errors);
 });
 
 app.post('/api/private/disconnected', function(req, res) {
+  console.log(req.body);
   res.json(_errors);
 });
 
 app.post('/api/private/teamswitch', function(req, res) {
+  console.log(req.body);
   res.json(_errors);
 });
 
 app.post('/api/private/playerscores', function(req, res) {
+  console.log(req.body);
   res.json(_errors);
 });
 
 app.post('/api/private/roundover', function(req, res) {
+  console.log(req.body);
   res.json(_errors);
 });

@@ -44,9 +44,9 @@ public Action:Event_PlayerConnect(Handle:event, const String:name[], bool:dontBr
 
     decl String:url[255];
     decl String:endpoint[] = "connected";
-    Format(url, sizeof(url), "http://tf2.intense.io/api/private/%s", endpoint);
+    Format(url, sizeof(url), "http://tf2.intense.io:8000/api/private/%s", endpoint);
     new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, url); // Create the HTTP request
-    if(bot) {
+    if(StrEqual(networkid, "BOT")) {
         // bots don't have a Steam ID, so just send their name
         Steam_SetHTTPRequestGetOrPostParameter(request, "player", playername);
     } else {
@@ -99,6 +99,19 @@ public Action:Event_PlayerDisconnect(Handle:event, const String:name[], bool:don
     GetEventString(event, "networkid", networkid, sizeof(networkid));
     new bot = GetEventInt(event, "bot"); 
     PrintToServer("[DEBUG] Player %s disconnected (%s, %d)", playername, networkid, bot);
+
+    decl String:url[255];
+    decl String:endpoint[] = "disconnected";
+    Format(url, sizeof(url), "http://tf2.intense.io:8000/api/private/%s", endpoint);
+    new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, url); // Create the HTTP request
+    if(StrEqual(networkid, "BOT")) {
+        // bots don't have a Steam ID, so just send their name
+        Steam_SetHTTPRequestGetOrPostParameter(request, "player", playername);
+    } else {
+        // Send the player's Steam ID
+        Steam_SetHTTPRequestGetOrPostParameter(request, "player", networkid);
+    }
+    Steam_SendHTTPRequest(request, OnRequestComplete); // Send the request
 }
 
 public Action:Event_PlayerChangeTeam(Handle:event, const String:name[], bool:dontBroadcast) {
