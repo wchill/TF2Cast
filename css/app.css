@@ -32,8 +32,35 @@ form input {
 
 #messages li {
   padding: 4px 8px;
+  -webkit-animation: fadeineven 1s; /* Chrome, Safari, Opera */
+  animation: fadeineven 1s;
 }
 
 #messages li:nth-child(odd) {
   background: #eee;
+  -webkit-animation: fadeinodd 1s; /* Chrome, Safari, Opera */
+  animation: fadeinodd 1s;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes fadeineven {
+    from {background: violet;}
+    to {background: white;}
+}
+
+/* Standard syntax */
+@keyframes fadeineven {
+    from {background: violet;}
+    to {background: white;}
+}
+
+@-webkit-keyframes fadeinodd {
+    from {background: violet;}
+    to {background: #eee;}
+}
+
+/* Standard syntax */
+@keyframes fadeinodd {
+    from {background: violet;}
+    to {background: #eee;}
 }
