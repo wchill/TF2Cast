@@ -17,7 +17,7 @@ function getTeam(teamNum) {
   teamNum = +teamNum;
   switch(teamNum) {
     case -1:
-      return 'tie';
+      return 'none';
     case 0:
       return 'red';
     case 1:
