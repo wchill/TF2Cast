@@ -54,7 +54,6 @@ Notify the server of a player connect.
 Request body data | Value type | Value
 ---|---|---
 player | string | The Steam ID of the player who connected
-team | int | team the player was on (0 for RED, 1 for BLU, 2 for spectator)
 
 ### POST /api/private/disconnected
 
@@ -65,7 +64,7 @@ Notify the server of a player disconnect.
 Request body data | Value type | Value
 ---|---|---
 player | string | The Steam ID of the player who disconnected
-team | int | team the player was on (0 for RED, 1 for BLU, 2 for spectator)
+team | int | team the player was on (-1 for none, 0 for RED, 1 for BLU, 2 for spectator)
 
 ### POST /api/private/teamswitch
 
@@ -97,6 +96,6 @@ Notify the server of a finished round and the new scores.
 
 Request body data | Value type | Value
 ---|---|---
-winning_team | int | 0 if RED won, 1 if BLU won, or -1 if the game was a tie
+winning_team | int | 0 if RED won, 1 if BLU won, or 3 if the game was a tie
 red_score | int | RED's new score
 blu_score | int | BLU's new score
