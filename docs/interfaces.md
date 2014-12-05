@@ -64,7 +64,7 @@ Notify the server of a player disconnect.
 Request body data | Value type | Value
 ---|---|---
 player | string | The Steam ID of the player who disconnected
-team | int | team the player was on (-1 for none, 0 for RED, 1 for BLU, 2 for spectator)
+team | int | team the player was on (0 for RED, 1 for BLU, 2 for spectator, or -1 if the player was not on a team)
 
 ### POST /api/private/teamswitch
 
