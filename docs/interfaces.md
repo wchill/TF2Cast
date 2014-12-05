@@ -96,6 +96,6 @@ Notify the server of a finished round and the new scores.
 
 Request body data | Value type | Value
 ---|---|---
-winning_team | int | 0 if RED won, 1 if BLU won, or -1 if the game was a tie
+winning_team | int | 0 if RED won, 1 if BLU won, or 3 if the game was a tie
 red_score | int | RED's new score
 blu_score | int | BLU's new score
