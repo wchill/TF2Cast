@@ -29,6 +29,9 @@ attacker | string | The Steam ID of the player who made the kill
 assister | string | The Steam ID of the player who assisted in the kill, if any, or an empty string if there was no assist
 weapon | string | The name of the weapon used to kill
 death_type | int | An integer identifying the type of death
+victim_team | int | team the player who died was on (0 for RED, 1 for BLU, 2 for spectator)
+attacker_team | int | team the player was who attacked was on (0 for RED, 1 for BLU, 2 for spectator)
+assister_team | int | team the player was who assisted was on (0 for RED, 1 for BLU, 2 for spectator)
 
 ### POST /api/private/respawn
 
@@ -39,6 +42,7 @@ Notify the server of a player respawn.
 Request body data | Value type | Value
 ---|---|---
 player | string | The Steam ID of the respawned player
+team | int | team the player was on (0 for RED, 1 for BLU, 2 for spectator)
 class | string | The name of the player's new class
 
 ### POST /api/private/connected
@@ -60,10 +64,11 @@ Notify the server of a player disconnect.
 Request body data | Value type | Value
 ---|---|---
 player | string | The Steam ID of the player who disconnected
+team | int | team the player was on (0 for RED, 1 for BLU, 2 for spectator, or -1 if the player was not on a team)
 
 ### POST /api/private/teamswitch
 
-Notify the server of a player switching teams.
+Notify the server of a player switching teams. Also called when a player first connects and joins a team.
 
 #### Request parameters
 
@@ -91,6 +96,6 @@ Notify the server of a finished round and the new scores.
 
 Request body data | Value type | Value
 ---|---|---
-winning_team | int | 0 if RED won, 1 if BLU won, or -1 if the game was a tie
+winning_team | int | 0 if RED won, 1 if BLU won, or 3 if the game was a tie
 red_score | int | RED's new score
 blu_score | int | BLU's new score
