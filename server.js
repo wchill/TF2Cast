@@ -24,6 +24,8 @@ function getTeam(teamNum) {
       return 'blue';
     case 2:
       return 'spectator';
+    case 3:
+      return 'tie';
     default:
       return 'error';
   }
@@ -62,6 +64,9 @@ app.post('/api/private/death', function(req, res) {
   var _assister = req.body.assister;
   var _weapon = req.body.weapon;
   var _death_type = req.body.death_type;
+  var _victim_team = req.body.victim_team;
+  var _attacker_team = req.body.attacker_team;
+  var _assister_team = req.body.assister_team;
 
   io.emit('message_from_server', createMessage(_attacker + ' has killed ' + 
                                               _victim + ' with ' +
@@ -75,6 +80,7 @@ app.post('/api/private/respawn', function(req, res) {
   var _errors = [];
   var _player = req.body.player;
   var _class = req.body.class;
+  var _team = req.body.team;
 
   io.emit('message_from_server', createMessage(_player + ' has respawned as a '+_class));
 
@@ -91,6 +97,7 @@ app.post('/api/private/connected', function(req, res) {
 
 app.post('/api/private/disconnected', function(req, res) {
   var _player = req.body.player;
+  var _team = req.body.team;
 
   io.emit('message_from_server', createMessage(_player + ' has disconnected'));
 

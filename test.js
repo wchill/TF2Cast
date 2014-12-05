@@ -24,7 +24,10 @@ var options = {
             victim: 'everyone',
             assister: 'nobody',
             weapon: 'code',
-            death_type: 'hacked'
+            death_type: 'hacked',
+            victim_team: 0,
+            attacker_team: 1,
+            spectator_team: 2
         }
         options.url = base_url + '/api/private/death';
         request(options, function (error, response, body) {
@@ -43,7 +46,8 @@ var options = {
     setTimeout(function() {
         options.form = {
             player: 'Eric',
-            class: 'Programmer'
+            class: 'Programmer',
+            team: 1
         }
         options.url = base_url + '/api/private/respawn';
         request(options, function (error, response, body) {
@@ -61,7 +65,8 @@ var options = {
 
     setTimeout(function() {
         options.form = {
-            player: 'Josh'
+            player: 'Josh',
+            team: 1
         };
         options.url = base_url + '/api/private/connected';
         request(options, function (error, response, body) {
@@ -76,7 +81,8 @@ var options = {
 
     setTimeout(function() {
         options.form = {
-            player: 'Michael'
+            player: 'Michael',
+            team: 2
         };
         options.url = base_url + '/api/private/disconnected';
         request(options, function (error, response, body) {
