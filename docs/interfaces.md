@@ -54,7 +54,6 @@ Notify the server of a player connect.
 Request body data | Value type | Value
 ---|---|---
 player | string | The Steam ID of the player who connected
-team | int | team the player was on (0 for RED, 1 for BLU, 2 for spectator)
 
 ### POST /api/private/disconnected
 
@@ -65,11 +64,11 @@ Notify the server of a player disconnect.
 Request body data | Value type | Value
 ---|---|---
 player | string | The Steam ID of the player who disconnected
-team | int | team the player was on (0 for RED, 1 for BLU, 2 for spectator)
+team | int | team the player was on (0 for RED, 1 for BLU, 2 for spectator, or -1 if the player was not on a team)
 
 ### POST /api/private/teamswitch
 
-Notify the server of a player switching teams.
+Notify the server of a player switching teams. Also called when a player first connects and joins a team.
 
 #### Request parameters
 
