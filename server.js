@@ -78,7 +78,7 @@ app.post('/api/private/death', function(req, res) {
   }
 
   if(!_errors.length)
-    io.emit('message_from_server', createMessage(_attacker + ' has killed ' + 
+    io.emit('message_from_server', createMessage(_attacker + ' has killed ' +
                                               _victim + ' with ' +
                                               _weapon + ' by ' +
                                               _death_type + ' assisted by ' +
