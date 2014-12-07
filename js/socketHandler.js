@@ -10,15 +10,24 @@ var socketHandler = {
       Actions.reset();
     });
 
-    socket.on('messages_from_server', function(messages) {
-      messages.forEach(Actions.messageReceive);
+    // socket.on('bootstrap', function(payload) {
+    //   Actions.updateTeam();
+    //   Actions.updateTeam();
+    //
+    //   payload.red_players.forEach(Actions.updatePlayer);
+    //   payload.blu_players.forEach(Actions.updatePlayer);
+    // });
+
+    socket.on('death', Actions.playerDeath);
+    socket.on('respawn', Actions.playerUpdate);
+    socket.on('connected', Actions.playerConnect);
+    socket.on('disconnected', Actions.playerDisconnect);
+    socket.on('teamswitch', Actions.playerUpdate);
+    socket.on('playerscores', function(payload) {
+      payload.red_players.forEach(Actions.playerUpdate);
+      payload.blu_players.forEach(Actions.playerUpdate);
     });
-
-    socket.on('message_from_server', Actions.messageReceive);
-  },
-
-  sendMessage: function(message) {
-    socket.emit('message_from_client', message);
+    socket.on('roundover', Actions.teamUpdate);
   }
 };
 
