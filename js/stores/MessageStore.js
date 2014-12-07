@@ -37,7 +37,7 @@ var MessageStore = assign({}, EventEmitter.prototype, {
 AppDispatcher.register(function(payload) {
   var action = payload.action;
 
-  switch(action.actionType) {
+  switch(action.type) {
     case Constants.MESSAGE_RECEIVE:
       addMessage(action.message);
       MessageStore.emitChange();
