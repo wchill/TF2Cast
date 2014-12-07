@@ -8,10 +8,11 @@ server.listen(8000);
 var io = require('socket.io')(server);
 app.use(bodyParser());
 
+var steam_key = "8FB18602A84F393E886D7E47F8FCF2D1";
+var steam_url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + steam_key;
+var player_info_url = steam_url + "&steamids=";
 
-var _messages = [
-  {text: 'Welcome to team fortress 2 Stream!', id: 0}
-];
+var _messages = [];
 
 function getTeam(teamNum) {
   teamNum = +teamNum;
@@ -31,6 +32,13 @@ function getTeam(teamNum) {
   }
 }
 
+
+
+function resetMessages() {
+  _messages = [
+    {text: 'Welcome to team fortress 2 Stream!', id: 0}
+  ]; 
+}
 function createMessage(text) {
   var newMessage = {text: text, id: _messages.length};
   _messages.push(newMessage);
@@ -40,6 +48,7 @@ function createMessage(text) {
 app.use('/', express.static(__dirname));
 
 io.on('connection', function(socket) {
+  resetMessages();
   socket.emit('messages_from_server', _messages);
 
   socket.on('message_from_client', function(message) {
@@ -78,7 +87,7 @@ app.post('/api/private/death', function(req, res) {
   }
 
   if(!_errors.length)
-    io.emit('message_from_server', createMessage(_attacker + ' has killed ' + 
+    io.emit('message_from_server', createMessage(_attacker + ' has killed ' +
                                               _victim + ' with ' +
                                               _weapon + ' by ' +
                                               _death_type + ' assisted by ' +
