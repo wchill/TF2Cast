@@ -43,10 +43,6 @@ AppDispatcher.register(function(payload) {
       MessageStore.emitChange();
       break;
 
-    case Constants.MESSAGE_SEND:
-      socketHandler.sendMessage(action.message);
-      break;
-
     case Constants.RESET:
       reset();
       MessageStore.emitChange();

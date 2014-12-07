@@ -6,11 +6,33 @@ var app = express();
 var server = require('http').Server(app);
 server.listen(8000);
 var io = require('socket.io')(server);
+var request = require('request');
 app.use(bodyParser());
 
 var steam_key = "8FB18602A84F393E886D7E47F8FCF2D1";
-var steam_url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + steam_key;
+var steam_url = "/ISteamUser/GetPlayerSummaries/v0002/?key=" + steam_key;
 var player_info_url = steam_url + "&steamids=";
+
+function request_players(player_ids) {
+  var requset_url = player_info_url;
+  for (var i = 0; i < player_ids.length; i++) {
+    requset_url += player_ids[i];
+    requset_url += ','
+  }
+  var headers = {
+      'Content-Type': 'application/json'
+  };
+
+  // Configure the request
+  var options = {
+      url: requset_url,
+      method: 'GET',
+      headers: headers,
+  };
+  request(options, function(res) {
+    return res.response.players;
+  }
+}
 
 var _messages = [];
 
@@ -32,8 +54,6 @@ function getTeam(teamNum) {
   }
 }
 
-
-
 function resetMessages() {
   _messages = [
     {text: 'Welcome to team fortress 2 Stream!', id: 0}
@@ -50,10 +70,6 @@ app.use('/', express.static(__dirname));
 io.on('connection', function(socket) {
   resetMessages();
   socket.emit('messages_from_server', _messages);
-
-  socket.on('message_from_client', function(message) {
-    io.emit('message_from_server', createMessage(message.text));
-  });
 
   socket.on('test_client', function(str) {
     io.emit('message_from_server', createMessage(str));

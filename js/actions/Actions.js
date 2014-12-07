@@ -10,13 +10,6 @@ var Actions = {
     });
   },
 
-  messageSend: function(message) {
-    AppDispatcher.handleViewAction({
-      actionType: Constants.MESSAGE_SEND,
-      message: message
-    });
-  },
-
   reset: function() {
     AppDispatcher.handleViewAction({
       actionType: Constants.RESET

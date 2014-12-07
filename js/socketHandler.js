@@ -15,10 +15,6 @@ var socketHandler = {
     });
 
     socket.on('message_from_server', Actions.messageReceive);
-  },
-
-  sendMessage: function(message) {
-    socket.emit('message_from_client', message);
   }
 };
 
