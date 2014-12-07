@@ -1,5 +1,8 @@
 # Interfaces
 
+## Notes
+All Steam IDs are given in the format `[U:1:XXXXXXXX]`, where `XXXXXXX` is a variable length number. To convert to SteamID64 (which the Steam API requires), take `XXXXXXX` and add it to 76561197960265728.
+
 ### POST /api/private/bootstrap
 
 Bootstrap the Node server with an initial state, such as when a new map is loaded.
