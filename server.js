@@ -9,31 +9,6 @@ var io = require('socket.io')(server);
 var request = require('request');
 app.use(bodyParser());
 
-var steam_key = "8FB18602A84F393E886D7E47F8FCF2D1";
-var steam_url = "/ISteamUser/GetPlayerSummaries/v0002/?key=" + steam_key;
-var player_info_url = steam_url + "&steamids=";
-
-function request_players(player_ids) {
-  var requset_url = player_info_url;
-  for (var i = 0; i < player_ids.length; i++) {
-    requset_url += player_ids[i];
-    requset_url += ','
-  }
-  var headers = {
-      'Content-Type': 'application/json'
-  };
-
-  // Configure the request
-  var options = {
-      url: requset_url,
-      method: 'GET',
-      headers: headers,
-  };
-  request(options, function(res) {
-    return res.response.players;
-  }
-}
-
 var _messages = [];
 
 function getTeam(teamNum) {
