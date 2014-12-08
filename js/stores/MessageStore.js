@@ -6,6 +6,7 @@ var assign = require('react/lib/Object.assign');
 var socketHandler = require('../socketHandler');
 
 var messages = [];
+var id = 1;
 
 function reset() {
   messages = [];
@@ -39,12 +40,22 @@ AppDispatcher.register(function(payload) {
 
   switch(action.type) {
     case Constants.MESSAGE_RECEIVE:
+      action.message.id = id++;
       addMessage(action.message);
       MessageStore.emitChange();
       break;
 
     case Constants.RESET:
       reset();
+      MessageStore.emitChange();
+      break;
+
+    case Constants.DEATH:
+      addMessage({
+        data: action.payload,
+        type: 'death',
+        id: id++
+      })
       MessageStore.emitChange();
       break;
   }

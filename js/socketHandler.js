@@ -2,6 +2,24 @@ var Actions = require('./Actions/Actions');
 
 var socket;
 
+function getTeam(teamNum) {
+  teamNum = +teamNum;
+  switch(teamNum) {
+    case -1:
+      return 'none';
+    case 0:
+      return 'red';
+    case 1:
+      return 'blue';
+    case 2:
+      return 'spectator';
+    case 3:
+      return 'tie';
+    default:
+      return 'error';
+  }
+}
+
 var socketHandler = {
   init: function() {
     socket = require('socket.io-client')();

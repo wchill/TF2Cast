@@ -54,3 +54,11 @@ form input {
     from {background: violet;}
     to {background: #eee;}
 }
+
+.redTeam {
+  color: red;
+}
+
+.blueTeam {
+  color: blue;
+}
