@@ -33,13 +33,6 @@ var socketHandler = {
     });
 
     socket.on('message_from_server', Actions.messageReceive);
-    // socket.on('bootstrap', function(payload) {
-    //   Actions.updateTeam();
-    //   Actions.updateTeam();
-    //
-    //   payload.red_players.forEach(Actions.updatePlayer);
-    //   payload.blu_players.forEach(Actions.updatePlayer);
-    // });
 
     socket.on('death', Actions.playerDeath);
     socket.on('respawn', Actions.playerUpdate);
