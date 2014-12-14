@@ -1,4 +1,4 @@
-var Actions = require('./Actions/Actions');
+var Actions = require('./actions/Actions');
 
 var socket;
 
