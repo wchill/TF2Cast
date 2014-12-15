@@ -2,14 +2,6 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Constants = require('../constants/Constants');
 
 var Actions = {
-
-  messageReceive: function(message) {
-    AppDispatcher.handleServerAction({
-      type: Constants.MESSAGE_RECEIVE,
-      message: message
-    });
-  },
-
   reset: function() {
     AppDispatcher.handleViewAction({
       type: Constants.RESET
