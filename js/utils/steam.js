@@ -1,4 +1,4 @@
-var bignum = require('bignum');
+var bignum = require('browserify-bignum');
 
 var _API_KEY = '8FB18602A84F393E886D7E47F8FCF2D1';
 var _ID64_BASE = bignum('76561197960265728');

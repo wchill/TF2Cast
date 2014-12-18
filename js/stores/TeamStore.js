@@ -85,8 +85,8 @@ function addPlayersToTeam(players, teamid) {
 var TeamStore = assign({}, EventEmitter.prototype, {
 
   getTeams: function() {
-    return [getTeam(_RED), getTeam(_BLU), getSpectators(_SPEC)];
-  }
+    return [getTeam(_RED), getTeam(_BLU), getTeam(_SPEC)];
+  },
 
   emitChange: function() {
     this.emit(Constants.CHANGE_EVENT);
