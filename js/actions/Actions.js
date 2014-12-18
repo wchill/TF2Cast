@@ -62,6 +62,13 @@ var Actions = {
       type: Constants.ROUND_OVER,
       message: data
     });
+  },
+
+  messageReceive: function(data) {
+    AppDispatcher.handleServerAction({
+      type: Constants.MESSAGE_RECEIVE,
+      message: data
+    });
   }
 
 };
