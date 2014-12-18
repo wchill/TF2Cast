@@ -47,10 +47,10 @@ var TEAMS = [
 
 var _messages = [
     {text: 'Welcome to team fortress 2 Stream!', id: 0}
-]; 
+];
 
 React.render(
-  <TF2 teams={TEAMS} server={SERVER} messages={_messages}/>,
+  <TF2 server={SERVER} messages={_messages}/>,
   document.getElementById('scoreboard-container')
 );
 
