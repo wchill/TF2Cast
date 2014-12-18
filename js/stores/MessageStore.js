@@ -37,7 +37,6 @@ var MessageStore = assign({}, EventEmitter.prototype, {
 
 AppDispatcher.register(function(payload) {
   var action = payload.action;
-
   switch(action.type) {
     case Constants.MESSAGE_RECEIVE:
       action.message.id = id++;
@@ -52,7 +51,7 @@ AppDispatcher.register(function(payload) {
 
     case Constants.DEATH:
       addMessage({
-        data: action.payload,
+        data: action,
         type: 'death',
         id: id++
       })

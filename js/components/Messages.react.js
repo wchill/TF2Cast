@@ -5,7 +5,8 @@ var Messages = React.createClass({
   _renderMessage: function(message) {
     switch(message.type) {
       case 'death' :
-        var data = message.data;
+        var data = message.data.message;
+        console.log(data);
         if (data.attacker_team == 1) {
           return <li key={message.id}>
             <span className='redTeam'>{data.attacker}</span>

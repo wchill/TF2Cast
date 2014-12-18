@@ -34,7 +34,7 @@ var socketHandler = {
 
     socket.on('message_from_server', Actions.messageReceive);
 
-    socket.on('death', Actions.playerDeath);
+    socket.on('death', Actions.death);
     socket.on('respawn', Actions.playerUpdate);
     socket.on('connected', Actions.playerConnect);
     socket.on('disconnected', Actions.playerDisconnect);
