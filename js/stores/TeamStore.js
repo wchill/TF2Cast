@@ -3,7 +3,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Constants = require('../constants/Constants');
 var assign = require('react/lib/Object.assign');
 var socketHandler = require('../socketHandler');
-var Steam = require('../utils/Steam');
+
 
 // Team: {
 //   id: int
@@ -85,7 +85,7 @@ function addPlayersToTeam(players, teamid) {
 var TeamStore = assign({}, EventEmitter.prototype, {
 
   getTeams: function() {
-    return [getTeam(_RED), getTeam(_BLU), getSpectators(_SPEC)];
+    return [getTeam(_RED), getTeam(_BLU), getTeam(_SPEC)];
   },
 
   emitChange: function() {

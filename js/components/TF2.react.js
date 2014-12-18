@@ -5,7 +5,7 @@ var Scoreboard = require('../components/Scoreboard.react');
 var Notifications = require('../components/Notifications.react');
 var ServerInfo = require('../components/ServerInfo.react')
 var MessageStore = require('../stores/MessageStore');
-var TeamStore = require('../stores/TeamStore')
+var TeamStore = require('../stores/TeamStore');
 var xhr = require('../utils/xhr');
 
 /******************************************************
