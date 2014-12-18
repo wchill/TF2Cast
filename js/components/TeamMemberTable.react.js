@@ -6,8 +6,8 @@ var TeamMemberTable = React.createClass({
   render: function() {
     var rows = [];
 
-    this.props.members.forEach(function(member) {
-      rows.push(<TeamMemberRow member={member} />);
+    this.props.players.forEach(function(player) {
+      rows.push(<TeamMemberRow player={player} />);
     });
 
     return (

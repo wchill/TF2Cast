@@ -73,12 +73,13 @@ var TF2 = React.createClass({
         <div className="row">
           <div className="col-md-9">
             <div className='row'>
-              <Scoreboard teams={this.props.teams} />
+              <Scoreboard teams={this.state.teams} />
             </div>
-
+/*
             <div className="row">
               <ServerInfo server={this.props.server} />
             </div>
+*/
           </div>
           <div className="col-md-3">
             <Notifications messages={this.state.messages} />

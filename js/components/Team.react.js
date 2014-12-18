@@ -8,7 +8,7 @@ var Team = React.createClass({
     return (
       <div className="panel">
         <TeamOverview team={this.props.team} />
-        <TeamMemberTable members={this.props.team.members} />
+        <TeamMemberTable players={this.props.team.players} />
       </div>
     );
   }
