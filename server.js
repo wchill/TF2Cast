@@ -12,22 +12,8 @@ var Steam = require('./js/utils/steam');
 
 var _messages = [];
 
-function getTeam(teamNum) {
-  teamNum = +teamNum;
-  switch(teamNum) {
-    case -1:
-      return 'none';
-    case 0:
-      return 'red';
-    case 1:
-      return 'blue';
-    case 2:
-      return 'spectator';
-    case 3:
-      return 'tie';
-    default:
-      return 'error';
-  }
+function isValidTeam(teamid) {
+  return [Constants.RED, Constants.BLU, Constants.SPEC].indexOf(teamid) > -1;
 }
 
 function resetMessages() {
@@ -53,161 +39,196 @@ io.on('connection', function(socket) {
 });
 
 app.post('/api/private/bootstrap', function(req, res) {
+  var b = req.body;
   var _errors = [];
-  var _map_time = req.body.map_time;
-  var _red_wins = req.body.red_wins;
-  var _blu_wins = req.body.blu_wins;
-  var _red_players = req.body.red_players;
-  var _blu_players = req.body.blu_players;
-  var _spectators = req.body.spectators;
 
+  if (b.red_players && b.blu_players && b.spectators) {
+    _errors.push("Invalid team (or spectator) list.")
+  }
+
+  var _map_time = b.map_time || -2;
   if (_map_time < -1) {
-	_errors.push("Invalid map time.");
+	   _errors.push("Invalid map time.");
   }
 
+  var _red_wins = b.red_wins || -1;
   if (_red_wins < 0) {
-	_errors.push("Invalid number of RED wins.");
+	   _errors.push("Invalid number of RED wins.");
   }
 
+  var _blu_wins = b.blu_wins || -1;
   if (_blu_wins < 0) {
-	_errors.push("Invalid number of BLU wins.");
+	   _errors.push("Invalid number of BLU wins.");
+  }
+
+  if (!Steam.isValidID3(b.player)) {
+    _errors.push("Invalid Steam ID(s)");
+  } else {
+    b.player = Steam.convertID3ToID64(b.player);
+  }
+
+  if (!_errors.length) {
+    io.emit('bootstrap', b);
   }
 
   res.json(_errors);
 });
 
 app.post('/api/private/death', function(req, res) {
+  var b = req.body;
   var _errors = [];
-  var _victim = req.body.victim;
-  var _attacker = req.body.attacker;
-  var _assister = req.body.assister;
-  var _weapon = req.body.weapon;
-  var _death_type = req.body.death_type;
-  var _victim_team = req.body.victim_team;
-  var _attacker_team = req.body.attacker_team;
-  var _assister_team = req.body.assister_team;
 
-  if (_victim_team < 0 || _victim_team > 2) {
-	_errors.push("Victim belongs to unknown team.");
+  if (!isValidTeam(b.victim_team)) {
+	   _errors.push("Victim belongs to unknown team.");
   }
 
-  if (_attacker_team < 0 || _attacker_team > 2) {
-	_errors.push("Attacker belongs to unknown team.");
+  if (!isValidTeam(b.attacker_team)) {
+	   _errors.push("Attacker belongs to unknown team.");
   }
 
-  if (_assister_team < 0 || _assister_team > 2) {
-	_errors.push("Assister belongs to unknown team.");
+  if (!isValidTeam(b.assister_team)) {
+	   _errors.push("Assister belongs to unknown team.");
   }
 
-  if(!_errors.length)
-    io.emit('death', req.body);
+  if (!Steam.areValidID3s([b.victiom, b.attacker, b.assister])) {
+    _errors.push("Invalid Steam ID(s).");
+  } else {
+    b.victim = Steam.convertID3ToID64(b.victim);
+    b.attacker = Steam.convertID3ToID64(b.attacker);
+    b.assister = Steam.convertID3ToID64(b.assister);
+  }
+
+  if(!_errors.length) {
+    io.emit('death', b);
+  }
+
   res.json(_errors);
 });
 
 app.post('/api/private/respawn', function(req, res) {
+  var b = req.body;
   var _errors = [];
 
-  var _player = req.body.player;
-  var _team = req.body.team;
-  var _class = req.body['class'];
-
-  if (_team < 0 || _team > 2) {
-	_errors.push("Respawned into unknown team.");
+  if (!isValidTeam(b.team)) {
+	   _errors.push("Respawned into unknown team.");
   }
 
-  if (!_errors.length)
-    io.emit('respawn', req.body);
+  if (!Steam.isValidID3(b.player)) {
+    _errors.push("Invalid Steam ID(s).");
+  } else {
+    b.player = Steam.convertID3ToID64(b.player);
+  }
+
+  if (!_errors.length) {
+    io.emit('respawn', b);
+  }
 
   res.json(_errors);
 });
 
 app.post('/api/private/connected', function(req, res) {
+  var b = req.body;
   var _errors = [];
 
-  io.emit('connected', req.body);
+  if (!Steam.isValidID3(b.player)) {
+    _errors.push("Invalid Steam ID(s).");
+  } else {
+    b.player = Steam.convertID3ToID64(b.player);
+  }
+
+  if (!_errors.length) {
+    io.emit('connected', b);
+  }
 
   res.json(_errors);
 });
 
 app.post('/api/private/disconnected', function(req, res) {
+  var b = req.body;
   var _errors = [];
 
-  var _player = req.body.player;
-  var _team = req.body.team;
-
-  if (_team < -1 || team > 2) {
-	_errors.push("Disconnect from unknown team.");
+  if (!isValidTeam(b.team)) {
+	   _errors.push("Disconnect from unknown team.");
   }
 
-  if (!_errors.length)
-    io.emit('disconnected', req.body);
+  if (!Steam.isValidID3(b.player)) {
+    _errors.push("Invalid Steam ID(s).");
+  } else {
+    b.player = Steam.convertID3ToID64(b.player);
+  }
+
+  if (!_errors.length) {
+    io.emit('disconnected', b);
+  }
 
   res.json(_errors);
 });
 
 app.post('/api/private/teamswitch', function(req, res) {
+  var b = req.body;
   var _errors = [];
 
-  var _player = req.body.player;
-  var _team = req.body.team;
-
-  if (_team < 0 || _team > 2) {
-	_errors.push("Teamswitch to unknown team.");
+  if (!isValidTeam(b.team)) {
+	   _errors.push("Teamswitch to unknown team.");
   }
 
-  if (!_errors.length)
-    io.emit('teamswitch', req.body);
+  if (!Steam.isValidID3(b.player)) {
+    _errors.push("Invalid Steam ID(s).");
+  } else {
+    b.player = Steam.convertID3ToID64(b.player);
+  }
+
+  if (!_errors.length) {
+    io.emit('teamswitch', b);
+  }
 
   res.json(_errors);
 });
 
 app.post('/api/private/playerscores', function(req, res) {
+  var b = req.body;
   var _errors = [];
 
   var _red_players = req.body.red_players;
   var _blu_players = req.body.blu_players;
 
-  for (var i = 0; i < _red_players.length; i++) {
-	if (!_red_players[i].hasOwnProperty("playerid")) {
-		_errors.push("Player ID not found");
-	}
-	if (!_red_players[i].hasOwnProperty("score")) {
-		_errors.push("Player Score not found");
-	} else if (_red_players[i].score < 0) {
-		_errors.push("Invalid score.");
-	}
+  var tryConvertPlayerId = function(player) {
+    if (!Steam.isValidID3(player.player)) {
+      _errors.push("Invalid Steam ID(s).");
+    } else {
+      player.player = Steam.convertID3ToID64(player.player);
+    }
   }
 
-  for (var i = 0; i < _blu_players.length; i++) {
-	if (!_blu_players[i].hasOwnProperty("playerid")) {
-		_errors.push("Player ID not found");
-	}
-	if (!_blu_players[i].hasOwnProperty("score")) {
-		_errors.push("Player Score not found");
-	} else if (_blu_players[i].score < 0) {
-		_errors.push("Invalid score.");
-	}
-  }
+  b.red_players.forEach(tryConvertPlayerId);
+  b.blu_players.forEach(tryConvertPlayerId);
 
-  if (!_errors.length)
-    io.emit('playerscores', req.body);
+  if (!_errors.length) {
+    io.emit('playerscores', b);
+  }
 
   res.json(_errors);
 });
 
 app.post('/api/private/roundover', function(req, res) {
+  var b = req.body;
   var _errors = [];
 
-  var _winning_team = req.body.winning_team;
-  var _red_score = req.body.red_score;
-  var _blu_score = req.body.blu_score;
-
-  if (_winning_team != 0 && _winning_team != 1 && _winning_team != 3) {
-	_errors.post("Winning team undefined.");
+  if (b.red_score < 0) {
+    _errors.push("Invalid RED score.");
   }
 
-  if (!_errors.length)
-    io.emit('roundover', req.body);
+  if (b.blu_score < 0) {
+    _errors.push("Invalid BLU score.");
+  }
+
+  if ([0, 1, 3].indexOf(b.winning_team) === -1) {
+	   _errors.push("Invalid winning team.");
+  }
+
+  if (!_errors.length) {
+    io.emit('roundover', b);
+  }
 
   res.json(_errors);
 });

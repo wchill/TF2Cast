@@ -6,12 +6,22 @@ var _ID3_RE = /^\[U:1:([\d]+)\]$/;
 
 var Steam = {
   convertID3ToID64: function (id3) {
-    var modifier = steamID3.substring(5, steamID3.length);
+    var modifier = steamID3.substring(5, steamID3.length-1);
     return _ID64_BASE.add(modifier).toString();
   },
 
   isValidID3: function (id3) {
     return _ID3_RE.test(steamdID3);
+  },
+
+  areValidID3s: function(id3s) {
+    id3s.forEach(function(id3) {
+      if (!this.isValidID3(id3)) {
+        return false;
+      }
+    });
+
+    return true;
   },
 
   getPlayerSummaryURL: function(playerid) {
