@@ -33,7 +33,7 @@ function getTeam(teamNum) {
 function resetMessages() {
   _messages = [
     {text: 'Welcome to team fortress 2 Stream!', id: 0}
-  ]; 
+  ];
 }
 function createMessage(text) {
   var newMessage = {text: text, id: _messages.length};

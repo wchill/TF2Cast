@@ -3,7 +3,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Constants = require('../constants/Constants');
 var assign = require('react/lib/Object.assign');
 var socketHandler = require('../socketHandler');
-var Steam = require('../utils/Steam');
+
 
 // Team: {
 //   id: int

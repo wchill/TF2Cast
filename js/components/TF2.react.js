@@ -5,7 +5,7 @@ var Scoreboard = require('../components/Scoreboard.react');
 var Notifications = require('../components/Notifications.react');
 var ServerInfo = require('../components/ServerInfo.react')
 var MessageStore = require('../stores/MessageStore');
-var TeamStore = require('../stores/TeamStore')
+var TeamStore = require('../stores/TeamStore');
 var xhr = require('../utils/xhr');
 
 /******************************************************
@@ -34,27 +34,6 @@ var xhr = require('../utils/xhr');
 var steam_key = "8FB18602A84F393E886D7E47F8FCF2D1";
 var steam_url = "/ISteamUser/GetPlayerSummaries/v0002/?key=" + steam_key;
 var player_info_url = steam_url + "&steamids=";
-
-// player ids should be strings
-function request_players(player_ids) {
-  var requset_url = player_info_url;
-  for (var i = 0; i < player_ids.length; i++) {
-    console.log(player_ids[i]);
-    requset_url += player_ids[i];
-    requset_url += ','
-  }
-  var headers = {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
-  };
-  xhr('GET', requset_url, {})
-    .success(function(data) {
-      // this.setState({
-
-      // });
-      console.log(data.response.players);
-    }.bind(this));
-}
 
 function last_five(messages) {
   if (messages.length <= 5) {
