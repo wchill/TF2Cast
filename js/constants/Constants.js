@@ -6,6 +6,6 @@ module.exports = keyMirror({
   CONNECT: null,
   DISCONNECT: null,
   PLAYER_UPDATE: null,
-  TEAM_UPDATE:,
+  TEAM_UPDATE: null,
   RESET: null
 });

@@ -53,7 +53,7 @@ function getTeam(teamid) {
   return {
     id: teamid,
     players: teamPlayers,
-    score: teamScores[teamid]
+    score: _teamScores[teamid]
   }
 }
 
@@ -141,7 +141,7 @@ AppDispatcher.register(function(payload) {
       console.log('BOOTSTRAP');
       reset(); // Bootstrap should only be called at the start of a game
 
-      if (message.hasOwnPropert('red_wins')
+      if (message.hasOwnProperty('red_wins')
         && message.hasOwnProperty('blu_wins')
         && message.hasOwnProperty('red_players')
         && message.hasOwnProperty('blu_players')) {

@@ -5,6 +5,7 @@ var Scoreboard = require('../components/Scoreboard.react');
 var Notifications = require('../components/Notifications.react');
 var ServerInfo = require('../components/ServerInfo.react')
 var MessageStore = require('../stores/MessageStore');
+var TeamStore = require('../stores/TeamStore')
 var xhr = require('../utils/xhr');
 
 /******************************************************
@@ -66,7 +67,7 @@ function last_five(messages) {
 function getState() {
   return {
     messages: last_five(MessageStore.getMessages()),
-    teams: [TeamStore.getRedTeam(), TeamStore.getBluTeam()]
+    teams: TeamStore.getTeams().slice(0,2)
   };
 }
 
