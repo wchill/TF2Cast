@@ -8,6 +8,7 @@ server.listen(8000);
 var io = require('socket.io')(server);
 var request = require('request');
 app.use(bodyParser());
+var Steam = require('./js/utils/steam');
 
 var _messages = [];
 
