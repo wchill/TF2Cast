@@ -31,19 +31,17 @@ var socketHandler = {
     socket.on('messages_from_server', function(messages) {
       messages.forEach(Actions.messageReceive);
     });
-
+    
     socket.on('message_from_server', Actions.messageReceive);
 
+    socket.on('bootstrap', Actions.bootstrap);
     socket.on('death', Actions.death);
-    socket.on('respawn', Actions.playerUpdate);
-    socket.on('connected', Actions.playerConnect);
-    socket.on('disconnected', Actions.playerDisconnect);
-    socket.on('teamswitch', Actions.playerUpdate);
-    socket.on('playerscores', function(payload) {
-      payload.red_players.forEach(Actions.playerUpdate);
-      payload.blu_players.forEach(Actions.playerUpdate);
-    });
-    socket.on('roundover', Actions.teamUpdate);
+    socket.on('respawn', Actions.respawn);
+    socket.on('connected', Actions.connected);
+    socket.on('disconnected', Actions.disconnected);
+    socket.on('teamswitch', Actions.teamswitch);
+    socket.on('playerscores', Actions.playerscores);
+    socket.on('roundover', Actions.roundover);
   }
 };
 

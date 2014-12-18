@@ -12,3 +12,7 @@ module.exports = keyMirror({
   ROUND_OVER: null,
   TEAM_SWITCH: null
 });
+
+module.exports.RED = 0;
+module.exports.BLU = 1;
+module.exports.SPEC = 2;
