@@ -1,9 +1,9 @@
 var EventEmitter = require('events').EventEmitter;
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Constants = require('../constants/Constants');
-
 var assign = require('react/lib/Object.assign');
 var socketHandler = require('../socketHandler');
+var Steam = require('../utils/Steam');
 
 // Team: {
 //   id: int
@@ -57,23 +57,7 @@ function getTeam(teamid) {
   }
 }
 
-function getRedTeam() {
-  return getTeam(_RED);
-}
-
-function getBluTeam() {
-  return getTeam(_BLU);
-}
-
-function getSpectators() {
-  return getTeam(_SPEC);
-}
-
-function getAllTeams() {
-  return [getRedTeam(), getBluTeam(), getSpectators()];
-}
-
-function bootstrapPlayers(players, teamid) {
+function addPlayersToTeam(players, teamid) {
   _players[player.playerid] = {
     id: player.playerid,
     name: isBot(player) ? player.playerid : '',
@@ -83,14 +67,9 @@ function bootstrapPlayers(players, teamid) {
     alive: true
   };
 
-  // Not sure if we'll need to through this in a closure or not...
+  // Not sure if we'll need to do this in a closure or not...
   if (!isBot(player)) {
-
-    // TODO extract into function call ???
-    var apiKey = '8FB18602A84F393E886D7E47F8FCF2D1';
-    var url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=';
-    url += apiKey + '&steamids=' + player.playerid;
-
+    var url = Steam.getPlayerSummaryURL(player.playerid);
     var userRequest = xhr('GET', url);
     userRequest.success(function(data) {
       _players[player.playerid].name = data.playername;
@@ -100,15 +79,14 @@ function bootstrapPlayers(players, teamid) {
       _players[player.playerid].name = player.playerid;
       // TODO Add default avatar in local assets folder
     });
-
   }
 }
 
 var TeamStore = assign({}, EventEmitter.prototype, {
 
   getTeams: function() {
-    return getAllTeams();
-  },
+    return [getTeam(_RED), getTeam(_BLU), getSpectators(_SPEC)];
+  }
 
   emitChange: function() {
     this.emit(Constants.CHANGE_EVENT);
@@ -149,9 +127,9 @@ AppDispatcher.register(function(payload) {
         _teamScores[_RED] = message.red_wins;
         _teamScores[_BLU] = message.blu_wins;
 
-        bootstrapPlayers(message.red_players, _RED);
-        bootstrapPlayers(message.blu_players, _BLU);
-        bootstrapPlayers(message.spectators, _SPEC);
+        addPlayersToTeam(message.red_players, _RED);
+        addPlayersToTeam(message.blu_players, _BLU);
+        addPlayersToTeam(message.spectators, _SPEC);
 
         TeamStore.emitChange();
       } else {
@@ -182,7 +160,7 @@ AppDispatcher.register(function(payload) {
     case Constants.CONNECTED:
       console.log('CONNECTED');
       if (message.hasOwnProperty('player') && message.hasOwnProperty('team')) {
-        bootstrapPlayers([message.player], message.team);
+        addPlayersToTeam([message.player], message.team);
         TeamStore.emitChange();
       } else {
         console.log("Malformed connected event");
