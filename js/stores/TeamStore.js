@@ -88,6 +88,11 @@ var TeamStore = assign({}, EventEmitter.prototype, {
     return [getTeam(_RED), getTeam(_BLU), getTeam(_SPEC)];
   },
 
+  getPlayerName: function(str) {
+    console.log('calling...');
+    return "Bhuwan";
+  },
+
   emitChange: function() {
     this.emit(Constants.CHANGE_EVENT);
   },
@@ -192,7 +197,6 @@ AppDispatcher.register(function(payload) {
 
     case Constants.PLAYERS_SCORES:
       console.log('PLAYER SCORES');
-
       if (message.hasOwnProperty('red_players') && message.hasOwnProperty('blu_players')) {
         message.red_players.forEach(function(red_player) {
           if (red_player.hasOwnProperty('player') && red_player.hasOwnProperty('score')) {

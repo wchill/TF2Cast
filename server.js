@@ -135,7 +135,7 @@ app.post('/api/private/disconnected', function(req, res) {
   var _player = req.body.player;
   var _team = req.body.team;
 
-  if (_team < -1 || team > 2) {
+  if (_team < -1 || _team > 2) {
 	_errors.push("Disconnect from unknown team.");
   }
 

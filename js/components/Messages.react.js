@@ -1,4 +1,5 @@
 var React = require('react');
+var TeamStore = require('../stores/TeamStore')
 
 var Messages = React.createClass({
 
@@ -6,7 +7,8 @@ var Messages = React.createClass({
     switch(message.type) {
       case 'death' :
         var data = message.data.message;
-        console.log(data);
+        data.attacker = TeamStore.getPlayerName(data.attacker);
+        data.victim = TeamStore.getPlayerName(data.victim)
         if (data.attacker_team == 1) {
           return <li key={message.id}>
             <span className='redTeam'>{data.attacker}</span>
