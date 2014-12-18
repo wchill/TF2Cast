@@ -65,7 +65,8 @@ function last_five(messages) {
 
 function getState() {
   return {
-    messages: last_five(MessageStore.getMessages())
+    messages: last_five(MessageStore.getMessages()),
+    teams: [TeamStore.getRedTeam(), TeamStore.getBluTeam()]
   };
 }
 
@@ -103,7 +104,7 @@ var TF2 = React.createClass({
             <Notifications messages={this.state.messages} />
           </div>
         </div>
-        
+
       </div>
     );
   }
