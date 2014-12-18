@@ -121,7 +121,7 @@ function bootstrap() {
             ],
             spectators: []
         };
-    xhr('POST', base_url + '/api/private/teamswitch', JSON.stringify(data));
+    xhr('POST', base_url + '/api/private/bootstrap', JSON.stringify(data));
 }
 
 function roundOver() {

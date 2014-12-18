@@ -128,7 +128,6 @@ AppDispatcher.register(function(payload) {
     case Constants.BOOTSTRAP:
       console.log('BOOTSTRAP');
       reset(); // Bootstrap should only be called at the start of a game
-
       if (message.hasOwnProperty('red_wins')
         && message.hasOwnProperty('blu_wins')
         && message.hasOwnProperty('red_players')
