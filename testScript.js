@@ -121,7 +121,9 @@ function bootstrap() {
             ],
             spectators: []
         };
-    xhr('POST', base_url + '/api/private/bootstrap', JSON.stringify(data));
+    xhr('POST', base_url + '/api/private/bootstrap', JSON.stringify(data))
+      .success(function(d) {console.log(d);});
+
 }
 
 function roundOver() {

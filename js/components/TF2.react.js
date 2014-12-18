@@ -17,6 +17,7 @@ function last_five(messages) {
 }
 
 function getState() {
+  console.log(TeamStore.getTeams());
   return {
     messages: last_five(MessageStore.getMessages()),
     teams: TeamStore.getTeams(),
@@ -31,10 +32,12 @@ var TF2 = React.createClass({
 
   componentDidMount: function() {
     MessageStore.addChangeListener(this._onChange);
+    TeamStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
     MessageStore.removeChangeListener(this._onChange);
+    TeamStore.removeChangeListener(this._onChange);
   },
 
   _onChange: function() {

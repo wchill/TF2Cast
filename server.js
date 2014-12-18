@@ -42,30 +42,30 @@ app.post('/api/private/bootstrap', function(req, res) {
   var b = req.body;
   var _errors = [];
 
-  if (b.red_players && b.blu_players && b.spectators) {
-    _errors.push("Invalid team (or spectator) list.")
-  }
+  // if (b.red_players && b.blu_players && b.spectators) {
+  //   _errors.push("Invalid team (or spectator) list.")
+  // }
 
-  var _map_time = b.map_time || -2;
-  if (_map_time < -1) {
-	   _errors.push("Invalid map time.");
-  }
+  // var _map_time = b.map_time || -2;
+  // if (_map_time < -1) {
+	 //   _errors.push("Invalid map time.");
+  // }
 
-  var _red_wins = b.red_wins || -1;
-  if (_red_wins < 0) {
-	   _errors.push("Invalid number of RED wins.");
-  }
+  // var _red_wins = b.red_wins || -1;
+  // if (_red_wins < 0) {
+	 //   _errors.push("Invalid number of RED wins.");
+  // }
 
-  var _blu_wins = b.blu_wins || -1;
-  if (_blu_wins < 0) {
-	   _errors.push("Invalid number of BLU wins.");
-  }
+  // var _blu_wins = b.blu_wins || -1;
+  // if (_blu_wins < 0) {
+	 //   _errors.push("Invalid number of BLU wins.");
+  // }
 
-  if (!Steam.isValidID3(b.player)) {
-    _errors.push("Invalid Steam ID(s)");
-  } else {
-    b.player = Steam.convertID3ToID64(b.player);
-  }
+  // if (!Steam.isValidID3(b.player)) {
+  //   _errors.push("Invalid Steam ID(s)");
+  // } else {
+  //   b.player = Steam.convertID3ToID64(b.player);
+  // }
 
   if (!_errors.length) {
     io.emit('bootstrap', b);

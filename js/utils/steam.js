@@ -11,7 +11,7 @@ var Steam = {
   },
 
   isValidID3: function (id3) {
-    return _ID3_RE.test(steamdID3);
+    return _ID3_RE.test(id3);
   },
 
   areValidID3s: function(id3s) {

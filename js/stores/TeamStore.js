@@ -3,7 +3,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Constants = require('../constants/Constants');
 var assign = require('react/lib/Object.assign');
 var socketHandler = require('../socketHandler');
-var steam = require('../utils/steam');
+var Steam = require('../utils/steam');
 
 
 // Team: {
@@ -124,8 +124,6 @@ AppDispatcher.register(function(payload) {
   var type = action.type;
   var message = action.message; // Message from plugin
 
-  console.log(action);
-
   switch(type) {
     case Constants.RESET:
       console.log('RESET');
@@ -135,7 +133,7 @@ AppDispatcher.register(function(payload) {
 
     case Constants.BOOTSTRAP:
       console.log('BOOTSTRAP');
-      reset(); // Bootstrap should only be called at the start of a game
+      //reset(); // Bootstrap should only be called at the start of a game
       if (message.hasOwnProperty('red_wins')
         && message.hasOwnProperty('blu_wins')
         && message.hasOwnProperty('red_players')
@@ -143,7 +141,7 @@ AppDispatcher.register(function(payload) {
 
         _teamScores[_RED] = message.red_wins;
         _teamScores[_BLU] = message.blu_wins;
-
+        // console.log(_teamScores);
         addPlayersToTeam(message.red_players, _RED);
         addPlayersToTeam(message.blu_players, _BLU);
         addPlayersToTeam(message.spectators, _SPEC);
