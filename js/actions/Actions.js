@@ -8,44 +8,6 @@ var Actions = {
     });
   },
 
-  playerDeath: function(data) {
-    AppDispatcher.handleServerAction({
-      type: Constants.DEATH,
-      message: data
-    });
-  },
-
-  playerConnect: function(data) {
-    AppDispatcher.handleServerAction({
-      type: Constants.CONNECT,
-      message: data
-    });
-  },
-
-  playerDisconnect: function(data) {
-    AppDispatcher.handleServerAction({
-      type: Constants.DISCONNECT,
-      message: data
-    });
-  },
-
-  playerUpdate: function(data) {
-    AppDispatcher.handleServerAction({
-      type: Constants.PLAYER_UPDATE,
-      message: data
-    });
-  },
-
-  teamUpdate: function(data) {
-    AppDispatcher.handleServerAction({
-      type: Constants.TEAM_UPDATE,
-      message: data
-    });
-  }
-
-
-  /************************************************* */
-
   bootstrap: function(data) {
     AppDispatcher.handleServerAction({
       type: Constants.BOOTSTRAP,
