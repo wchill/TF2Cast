@@ -9,7 +9,8 @@ var socketHandler = require('../socketHandler');
 //   id: int
 //   players: map <playerid, player>
 //   score: int
-// }s
+// }
+
 // Player: {
 //   id: string
 //   team: int // ???
@@ -18,9 +19,9 @@ var socketHandler = require('../socketHandler');
 //   avatar: string // URL
 //   dead: boolean
 // }
-var _RED = 0;
-var _BLU = 1;
-var _SPEC = 2;
+var _RED = Constants.RED;
+var _BLU = Constants.BLU;
+var _SPEC = Constants.SPEC;
 
 var _players = {};
 var _teamScores = [0, 0, 0]; // [RED, BLU, SPEC]
@@ -85,7 +86,11 @@ function addPlayersToTeam(players, teamid) {
 var TeamStore = assign({}, EventEmitter.prototype, {
 
   getTeams: function() {
-    return [getTeam(_RED), getTeam(_BLU), getTeam(_SPEC)];
+    return [getTeam(_RED), getTeam(_BLU)];
+  },
+
+  getSpectators: function() {
+    return getTeam(_SPEC);
   },
 
   emitChange: function() {
@@ -216,7 +221,10 @@ AppDispatcher.register(function(payload) {
     case Constants.ROUND_OVER:
       console.log('ROUND OVER');
 
-      if (message.hasOwnProperty('winning_team') && message.hasOwnProperty('red_score') && message.hasOwnProperty('blu_score')) {
+      if (message.hasOwnProperty('winning_team')
+        && message.hasOwnProperty('red_score')
+        && message.hasOwnProperty('blu_score')) {
+
         _teamScores[_RED] = message.red_score;
         _teamScores[_BLU] = message.blu_score;
         TeamStore.emitChange();

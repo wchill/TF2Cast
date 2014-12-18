@@ -2,7 +2,7 @@
 
 var React = require('react');
 var Team = require('../components/Team.react');
-var ServerInfo = require('../components/ServerInfo.react');
+var Constants = require('../constants/Constants');
 
 /******************************************************
  *
@@ -26,8 +26,8 @@ var ServerInfo = require('../components/ServerInfo.react');
 
 var Scoreboard = React.createClass({
   render: function() {
-    var blu = this.props.teams[0];
-    var red = this.props.teams[1];
+    var blu = this.props.teams[Constants.BLU];
+    var red = this.props.teams[Constants.RED];
 
     return (
       <div className="container-fluid">
