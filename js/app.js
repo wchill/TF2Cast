@@ -1,8 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var Actions = require('./Actions/Actions');
-var Chat = require('./components/Chat.react');
+var Actions = require('./actions/Actions');
 var TF2 = require('./components/TF2.react');
 var socketHandler = require('./socketHandler');
 

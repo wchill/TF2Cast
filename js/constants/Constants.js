@@ -1,8 +1,14 @@
 var keyMirror = require('react/lib/keyMirror');
 
 module.exports = keyMirror({
+  BOOTSTRAP: null,
   CHANGE_EVENT: null,
-  MESSAGE_RECEIVE: null,
-  MESSAGE_SEND: null,
+  CONNECTED: null,
+  DEATH: null,
+  DISCONNECTED: null,
+  PLAYER_SCORES: null,
   RESET: null,
+  RESPAWN: null,
+  ROUND_OVER: null,
+  TEAM_SWITCH: null
 });

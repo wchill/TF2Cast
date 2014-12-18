@@ -1,6 +1,24 @@
-var Actions = require('./Actions/Actions');
+var Actions = require('./actions/Actions');
 
 var socket;
+
+function getTeam(teamNum) {
+  teamNum = +teamNum;
+  switch(teamNum) {
+    case -1:
+      return 'none';
+    case 0:
+      return 'red';
+    case 1:
+      return 'blue';
+    case 2:
+      return 'spectator';
+    case 3:
+      return 'tie';
+    default:
+      return 'error';
+  }
+}
 
 var socketHandler = {
   init: function() {
@@ -15,10 +33,17 @@ var socketHandler = {
     });
 
     socket.on('message_from_server', Actions.messageReceive);
-  },
 
-  sendMessage: function(message) {
-    socket.emit('message_from_client', message);
+    socket.on('death', Actions.playerDeath);
+    socket.on('respawn', Actions.playerUpdate);
+    socket.on('connected', Actions.playerConnect);
+    socket.on('disconnected', Actions.playerDisconnect);
+    socket.on('teamswitch', Actions.playerUpdate);
+    socket.on('playerscores', function(payload) {
+      payload.red_players.forEach(Actions.playerUpdate);
+      payload.blu_players.forEach(Actions.playerUpdate);
+    });
+    socket.on('roundover', Actions.teamUpdate);
   }
 };
 

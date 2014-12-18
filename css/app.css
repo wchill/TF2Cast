@@ -9,21 +9,6 @@ body {
   font-size: 16px;
 }
 
-form {
-  background: #000;
-  bottom: 0;
-  padding: 2px;
-  position: fixed;
-  width: 100%;
-}
-
-form input {
-  border: 0;
-  font-size: 16px;
-  padding: 8px;
-  width: 100%;
-}
-
 #messages {
   list-style-type: none;
   margin: 0;
@@ -31,36 +16,34 @@ form input {
 }
 
 #messages li {
-  padding: 4px 8px;
-  -webkit-animation: fadeineven 1s; /* Chrome, Safari, Opera */
-  animation: fadeineven 1s;
+  padding: 8px 16px;
 }
 
 #messages li:nth-child(odd) {
   background: #eee;
-  -webkit-animation: fadeinodd 1s; /* Chrome, Safari, Opera */
-  animation: fadeinodd 1s;
+  
 }
 
-/* Chrome, Safari, Opera */
-@-webkit-keyframes fadeineven {
-    from {background: violet;}
-    to {background: white;}
+#messages li:last-child {
+  -webkit-animation: fadein 1s; /* Chrome, Safari, Opera */
+  animation: fadein 1s;
 }
 
-/* Standard syntax */
-@keyframes fadeineven {
-    from {background: violet;}
-    to {background: white;}
-}
-
-@-webkit-keyframes fadeinodd {
+@-webkit-keyframes fadein {
     from {background: violet;}
     to {background: #eee;}
 }
 
 /* Standard syntax */
-@keyframes fadeinodd {
+@keyframes fadein {
     from {background: violet;}
     to {background: #eee;}
+}
+
+.redTeam {
+  color: red;
+}
+
+.blueTeam {
+  color: blue;
 }
