@@ -3,6 +3,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Constants = require('../constants/Constants');
 var assign = require('react/lib/Object.assign');
 var socketHandler = require('../socketHandler');
+var steam = require('../utils/steam');
 
 
 // Team: {
@@ -32,7 +33,7 @@ function reset() {
 }
 
 function isBot(playerid) {
-  return playerid[0] !== '[';
+  return !Steam.isValidID3(playerid);
 }
 
 function playersToArray() {
@@ -59,34 +60,41 @@ function getTeam(teamid) {
 }
 
 function addPlayersToTeam(players, teamid) {
-  _players[player.playerid] = {
-    id: player.playerid,
-    name: isBot(player) ? player.playerid : '',
-    avatar: '',
-    score: player.score,
-    team: teamid,
-    alive: true
-  };
+  players.forEach(function(player) {
+    _players[player.player] = {
+      id: player.player,
+      name: isBot(player) ? player.player : '',
+      avatar: '',
+      score: player.score,
+      team: teamid,
+      alive: true
+    };
 
-  // Not sure if we'll need to do this in a closure or not...
-  if (!isBot(player)) {
-    var url = Steam.getPlayerSummaryURL(player.playerid);
-    var userRequest = xhr('GET', url);
-    userRequest.success(function(data) {
-      _players[player.playerid].name = data.playername;
-      _players[player.playerid].avatar = data.avatar; // url to 32 x 32px
-    });
-    userRequest.error(function(data) {
-      _players[player.playerid].name = player.playerid;
-      // TODO Add default avatar in local assets folder
-    });
-  }
+    // Not sure if we'll need to do this in a closure or not...
+    if (!isBot(player)) {
+      var url = Steam.getPlayerSummaryURL(player.player);
+      var userRequest = xhr('GET', url);
+      userRequest.success(function(data) {
+        _players[player.player].name = data.playername;
+        _players[player.player].avatar = data.avatar; // url to 32 x 32px
+      });
+      userRequest.error(function(data) {
+        _players[player.player].name = player.player;
+        // TODO Add default avatar in local assets folder
+      });
+    }
+
+  });
 }
 
 var TeamStore = assign({}, EventEmitter.prototype, {
 
   getTeams: function() {
     return [getTeam(_RED), getTeam(_BLU)];
+  },
+
+  getPlayerName: function(playerid) {
+      return _players[playerid].name;
   },
 
   getSpectators: function() {
