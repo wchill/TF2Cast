@@ -132,8 +132,32 @@ public Action:Timer_UpdateScores(Handle:timer) {
             GetClientName(client, playername, sizeof(playername));
             strcopy(networkid, sizeof(networkid), playername);
         }
+        decl String:classname[64];
+        new TFClassType:class = TF2_GetPlayerClass(client);
+        if(class == TFClass_Scout) {
+            strcopy(classname, sizeof(classname), "Scout");
+        } else if(class == TFClass_Sniper) {
+            strcopy(classname, sizeof(classname), "Sniper");
+        } else if(class == TFClass_Soldier) {
+            strcopy(classname, sizeof(classname), "Soldier");
+        } else if(class == TFClass_DemoMan) {
+            strcopy(classname, sizeof(classname), "Demoman");
+        } else if(class == TFClass_Medic) {
+            strcopy(classname, sizeof(classname), "Medic");
+        } else if(class == TFClass_Heavy) {
+            strcopy(classname, sizeof(classname), "Heavy");
+        } else if(class == TFClass_Pyro) {
+            strcopy(classname, sizeof(classname), "Pyro");
+        } else if(class == TFClass_Spy) {
+            strcopy(classname, sizeof(classname), "Spy");
+        } else if(class == TFClass_Engineer) {
+            strcopy(classname, sizeof(classname), "Engineer");
+        } else {
+            strcopy(classname, sizeof(classname), "Unknown");
+        }
         json_object_set_new(player, "player", json_string(networkid));
         json_object_set_new(player, "score", json_integer(GetEntData(resourceent, offset + (client * 4), 4)));
+        json_object_set_new(player, "charClass", json_string(classname));
         new team = GetClientTeam(client);
         if(team == 1) {
             json_array_append_new(specteam, player);
