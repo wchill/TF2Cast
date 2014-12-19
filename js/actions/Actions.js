@@ -64,16 +64,16 @@ var Actions = {
     });
   },
 
-  messageReceive: function(data) {
+  player_summary: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.MESSAGE_RECEIVE,
+      type: Constants.PLAYER_SUMMARY,
       message: data
     });
   },
 
-  player_summary: function(data) {
+  tf2_init: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.PLAYER_SUMMARY,
+      type: Constants.TF2_INIT,
       message: data
     });
   }

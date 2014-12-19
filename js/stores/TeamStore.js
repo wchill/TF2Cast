@@ -1,9 +1,8 @@
 var EventEmitter = require('events').EventEmitter;
 var AppDispatcher = require('../dispatcher/AppDispatcher');
-var Constants = require('../constants/Constants');
 var assign = require('react/lib/Object.assign');
+var Constants = require('../constants/Constants');
 var socketHandler = require('../socketHandler');
-var Steam = require('../utils/steam');
 var xhr = require('../utils/xhr');
 
 var _BOT_RE = /^([\d]+)$/;
@@ -15,7 +14,7 @@ var _BOT_RE = /^([\d]+)$/;
 // }
 
 // Player: {
-//   id: string
+//   player: string
 //   team: int // ???
 //   name: string
 //   score: int
@@ -36,7 +35,6 @@ function reset() {
 }
 
 function isBot(playerid) {
-  // return !Steam.isValidID3(playerid);
   return !(_BOT_RE.test(playerid) && playerid.length > 12);
 }
 
@@ -64,9 +62,10 @@ function getTeam(teamid) {
 }
 
 function addPlayersToTeam(players, teamid) {
+  console.log(players);
   players.forEach(function(player) {
     _players[player.player] = {
-      id: player.player,
+      player: player.player,
       name: isBot(player) ? player.player : '',
       avatar: '',
       score: player.score || 0,
@@ -75,6 +74,7 @@ function addPlayersToTeam(players, teamid) {
       charClass: player.charClass || ''
     };
 
+    console.log(player.player)
     if(!isBot(player.player)) {
       socketHandler.getPlayerSummary(player.player);
     }
@@ -135,7 +135,6 @@ AppDispatcher.register(function(payload) {
 
         _teamScores[_RED] = message.red_wins;
         _teamScores[_BLU] = message.blu_wins;
-        // console.log(_teamScores);
         addPlayersToTeam(message.red_players, _RED);
         addPlayersToTeam(message.blu_players, _BLU);
         addPlayersToTeam(message.spectators, _SPEC);
@@ -179,8 +178,6 @@ AppDispatcher.register(function(payload) {
 
     case Constants.DISCONNECTED:
       console.log('DISCONNECTED');
-
-      // TODO Is this desired?
       if (message.hasOwnProperty('player')) {
         delete _players[message.player];
         TeamStore.emitChange();
@@ -191,7 +188,6 @@ AppDispatcher.register(function(payload) {
 
     case Constants.TEAM_SWITCH:
       console.log('TEAM SWITCH');
-
       if (message.hasOwnProperty('player') && message.hasOwnProperty('team')) {
         _players[message.player].team = message.team;
         TeamStore.emitChange();
@@ -204,13 +200,17 @@ AppDispatcher.register(function(payload) {
       console.log('PLAYER SCORES');
       if (message.hasOwnProperty('red_players') && message.hasOwnProperty('blu_players')) {
         message.red_players.forEach(function(red_player) {
-          if (red_player.hasOwnProperty('player') && red_player.hasOwnProperty('score')) {
+          if (red_player.hasOwnProperty('player')
+            && red_player.hasOwnProperty('score')
+            && _players.hasOwnProperty(red_player.player)) {
             _players[red_player.player].score = red_player.score;
           }
         });
 
         message.blu_players.forEach(function(blu_player) {
-          if (blu_player.hasOwnProperty('player') && blu_player.hasOwnProperty('score')) {
+          if (blu_player.hasOwnProperty('player')
+            && blu_player.hasOwnProperty('score')
+            && _players.hasOwnProperty(blu_player.player)) {
             _players[blu_player.player].score = blu_player.score;
           }
         });
@@ -224,7 +224,6 @@ AppDispatcher.register(function(payload) {
 
     case Constants.ROUND_OVER:
       console.log('ROUND OVER');
-
       if (message.hasOwnProperty('winning_team')
         && message.hasOwnProperty('red_score')
         && message.hasOwnProperty('blu_score')) {
@@ -234,12 +233,27 @@ AppDispatcher.register(function(payload) {
         TeamStore.emitChange();
       } else {
         console.log("Malformed roundover event");
+        console.log(message);
       }
       break;
+
     case Constants.PLAYER_SUMMARY:
       console.log('PLAYER SUMMARY');
       _players[message.player].name = message.name;
       _players[message.player].avatar = message.avatar;
+      TeamStore.emitChange();
+      break;
+
+    case Constants.TF2_INIT:
+      console.log('TF2_INIT');
+      _players = message.players;
+
+      var playersArray = playersToArray(message.players);
+      playersArray.forEach(function(p) {
+        addPlayersToTeam([p], p.team);
+      });
+
+      _teamScores = message.teamScores;
       TeamStore.emitChange();
       break;
 

@@ -125,7 +125,6 @@ function bootstrap() {
               { player:left + '798' + right, score:0 },
               { player: 'JoseBot', score:0 }
             ]
-            // spectators: []
         };
     xhr('POST', base_url + '/api/private/bootstrap', JSON.stringify(data));
 
@@ -134,7 +133,7 @@ function bootstrap() {
 function roundOver() {
     var data = {
             red_score: 10,
-            blue_score: 2,
+            blu_score: 2,
             winning_team: 0
         }
     xhr('POST', base_url + '/api/private/roundover', JSON.stringify(data));

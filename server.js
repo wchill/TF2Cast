@@ -13,6 +13,8 @@ var Constants = require('./js/constants/Constants');
 var xhr = require('./utils/xhr');
 
 var _messages = [];
+var _players = {};
+var _teamScores = [0, 0, 0];
 
 function isValidTeam(teamid) {
   return [Constants.RED, Constants.BLU, Constants.SPEC].indexOf(teamid) > -1;
@@ -23,18 +25,67 @@ function resetMessages() {
     {text: 'Welcome to team fortress 2 Stream!', id: 0}
   ];
 }
+
+function resetTeams() {
+  _players = {};
+  _teamScores = [0, 0, 0];
+}
+
+function isBot(playerid) {
+  return !Steam.isValidID3(playerid);
+}
+
 function createMessage(text) {
   var newMessage = {text: text, id: _messages.length};
   _messages.push(newMessage);
   return newMessage;
 }
 
+var tryConvertPlayerId = function(player) {
+  if (Steam.isValidID3(player.player)) {
+    player.player = Steam.convertID3ToID64(player.player);
+  }
+};
+
+function addPlayersToTeam(players, teamid) {
+  players.forEach(function(player) {
+    _players[player.player] = {
+      player: player.player,
+      name: isBot(player) ? player.player : '',
+      avatar: '',
+      score: player.score || 0,
+      team: teamid,
+      alive: true,
+      charClass: player.charClass || ''
+    };
+
+    if(!isBot(player.player)) {
+      var url = Steam.getPlayerSummaryURL(player);
+      var userRequest = xhr('GET', url);
+
+      userRequest.success(function(data) {
+        var _player = data.response.players[0];
+        _players[player.player].name = _player.personaname;
+        _players[player.player].avatar = _player.avatar;
+      });
+      userRequest.error(function(data) {
+        _players[player.player].name = '';
+        _players[player.player].avatar = '';
+      });
+    }
+
+  });
+}
+
+
+
 app.use('/', express.static(__dirname));
 
 io.on('connection', function(socket) {
-  resetMessages();
   socket.emit('messages_from_server', _messages);
+  socket.emit('tf2_init', {players: _players, teamScores: _teamScores});
 
+  // TODO This can be removed probably
   socket.on('test_client', function(str) {
     io.emit('message_from_server', createMessage(str));
   });
@@ -85,19 +136,18 @@ app.post('/api/private/bootstrap', function(req, res) {
 	   _errors.push("Invalid number of BLU wins.");
   }
 
-  var tryConvertPlayerId = function(player) {
-    if (!Steam.isValidID3(player.player)) {
-      return;
-    } else {
-      player.player = Steam.convertID3ToID64(player.player);
-    }
-  }
-
   b.red_players.forEach(tryConvertPlayerId);
   b.blu_players.forEach(tryConvertPlayerId);
   b.spectators.forEach(tryConvertPlayerId);
 
   if (!_errors.length) {
+    console.log('BOOTSTRAP');
+    _teamScores[Constants.RED] = b.red_wins;
+    _teamScores[Constants.BLU] = b.blu_wins;
+    addPlayersToTeam(b.red_players, Constants.RED);
+    addPlayersToTeam(b.blu_players, Constants.BLU);
+    addPlayersToTeam(b.spectators, Constants.SPEC);
+
     io.emit('bootstrap', b);
   }
 
@@ -120,15 +170,18 @@ app.post('/api/private/death', function(req, res) {
 	   _errors.push("Assister belongs to unknown team.");
   }
 
-  if (!Steam.areValidID3s([b.victiom, b.attacker, b.assister])) {
-    /* pass */
-  } else {
+  if (Steam.areValidID3s([b.victim, b.attacker, b.assister])) {
     b.victim = Steam.convertID3ToID64(b.victim);
     b.attacker = Steam.convertID3ToID64(b.attacker);
-    if(b.assister) { b.assister = Steam.convertID3ToID64(b.assister); }
+
+    if(b.assister) {
+      b.assister = Steam.convertID3ToID64(b.assister);
+    }
   }
 
   if(!_errors.length) {
+    console.log('DEATH');
+    _players[b.victim].alive = false;
     io.emit('death', b);
   }
 
@@ -143,13 +196,14 @@ app.post('/api/private/respawn', function(req, res) {
 	   _errors.push("Respawned into unknown team.");
   }
 
-  if (!Steam.isValidID3(b.player)) {
-    // _errors.push("Invalid Steam ID(s).");
-  } else {
+  if (Steam.isValidID3(b.player)) {
     b.player = Steam.convertID3ToID64(b.player);
   }
 
   if (!_errors.length) {
+    console.log('RESPAWN');
+    _players[b.player].alive = true;
+    _players[b.player].charClass = b.charClass;
     io.emit('respawn', b);
   }
 
@@ -167,6 +221,8 @@ app.post('/api/private/connected', function(req, res) {
   }
 
   if (!_errors.length) {
+    console.log('CONNECTED');
+    addPlayersToTeam([{player: b.player}], b.team);
     io.emit('connected', b);
   }
 
@@ -188,6 +244,8 @@ app.post('/api/private/disconnected', function(req, res) {
   }
 
   if (!_errors.length) {
+    console.log('DISCONNECTED');
+    delete _players[b.player];
     io.emit('disconnected', b);
   }
 
@@ -209,6 +267,8 @@ app.post('/api/private/teamswitch', function(req, res) {
   }
 
   if (!_errors.length) {
+    console.log('TEAM SWITCH');
+    _players[b.player].team = b.team;
     io.emit('teamswitch', b);
   }
 
@@ -219,21 +279,31 @@ app.post('/api/private/playerscores', function(req, res) {
   var b = req.body;
   var _errors = [];
 
-  var _red_players = req.body.red_players;
-  var _blu_players = req.body.blu_players;
-
-  var tryConvertPlayerId = function(player) {
-    if (!Steam.isValidID3(player.player)) {
-      return;
-    } else {
-      player.player = Steam.convertID3ToID64(player.player);
-    }
-  }
-
   b.red_players.forEach(tryConvertPlayerId);
   b.blu_players.forEach(tryConvertPlayerId);
 
   if (!_errors.length) {
+    console.log('PLAYER SCORES');
+    b.red_players.forEach(function(red_player) {
+      console.log("red_player");
+      console.log(red_player);
+      console.log("players");
+      console.log(_players);
+      if (red_player.hasOwnProperty('player')
+        && red_player.hasOwnProperty('score')
+        && _players.hasOwnProperty(red_player.player)) {
+
+        _players[red_player.player].score = red_player.score;
+      }
+    });
+
+    b.blu_players.forEach(function(blu_player) {
+      if (blu_player.hasOwnProperty('player')
+        && blu_player.hasOwnProperty('score')
+        && _players.hasOwnProperty(blu_player.player)) {
+        _players[blu_player.player].score = blu_player.score;
+      }
+    });
     io.emit('playerscores', b);
   }
 
@@ -257,6 +327,9 @@ app.post('/api/private/roundover', function(req, res) {
   }
 
   if (!_errors.length) {
+    console.log('ROUND OVER');
+    _teamScores[Constants.RED] = b.red_score;
+    _teamScores[Constants.BLU] = b.blu_score;
     io.emit('roundover', b);
   }
 

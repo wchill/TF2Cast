@@ -3,7 +3,6 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Constants = require('../constants/Constants');
 
 var assign = require('react/lib/Object.assign');
-var socketHandler = require('../socketHandler');
 
 var messages = [];
 var id = 1;
@@ -38,12 +37,6 @@ var MessageStore = assign({}, EventEmitter.prototype, {
 AppDispatcher.register(function(payload) {
   var action = payload.action;
   switch(action.type) {
-    case Constants.MESSAGE_RECEIVE:
-      action.message.id = id++;
-      addMessage(action.message);
-      MessageStore.emitChange();
-      break;
-
     case Constants.RESET:
       reset();
       MessageStore.emitChange();
@@ -54,7 +47,7 @@ AppDispatcher.register(function(payload) {
         data: action,
         type: 'death',
         id: id++
-      })
+      });
       MessageStore.emitChange();
       break;
   }

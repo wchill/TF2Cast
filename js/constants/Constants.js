@@ -11,7 +11,8 @@ module.exports = keyMirror({
   RESPAWN: null,
   ROUND_OVER: null,
   TEAM_SWITCH: null,
-  PLAYER_SUMMARY: null
+  PLAYER_SUMMARY: null,
+  TF2_INIT: null
 });
 
 module.exports.RED = 0;
