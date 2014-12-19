@@ -46,7 +46,7 @@ Request body data | Value type | Value
 ---|---|---
 player | string | The Steam ID of the respawned player
 team | int | team the player was on (0 for RED, 1 for BLU, 2 for spectator)
-class | string | The name of the player's new class
+charClass | string | The name of the player's new class
 
 ### POST /api/private/connected
 

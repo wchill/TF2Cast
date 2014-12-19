@@ -18,7 +18,8 @@ var Steam = require('../utils/steam');
 //   name: string
 //   score: int
 //   avatar: string // URL
-//   dead: boolean
+//   dead: boolean,
+//   charClass: ""
 // }
 var _RED = Constants.RED;
 var _BLU = Constants.BLU;
@@ -67,7 +68,8 @@ function addPlayersToTeam(players, teamid) {
       avatar: '',
       score: player.score,
       team: teamid,
-      alive: true
+      alive: true,
+      charClass: player.charClass
     };
 
     // Not sure if we'll need to do this in a closure or not...
@@ -166,6 +168,7 @@ AppDispatcher.register(function(payload) {
       console.log('RESPAWN');
       if (message.hasOwnProperty('player')) {
         _players[message.player].alive = true;
+        _players[message.player].charClass = message.charClass;
         TeamStore.emitChange();
       } else {
         console.log("Malformed respawn event");

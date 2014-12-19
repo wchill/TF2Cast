@@ -1,17 +1,16 @@
 /** @jsx React.DOM */
 var React = require('react');
+var TeamMemberAvatar = require('../components/TeamMemberAvatar.react');
+var TeamMemberDeath = require('../components/TeamMemberDeath.react');
 
 var TeamMemberRow = React.createClass({
   render: function() {
-    var avatar = this.props.player.avatar === "" ? "_" : this.props.player.avatar;
-    var alive = this.props.player.alive ? "" : "DEAD";
-
     return (
       <tr>
-      <td>{avatar}</td>
+      <td><TeamMemberAvatar avatar={this.props.player.avatar} /></td>
       <td>{this.props.player.name}</td>
-      <td>{alive}</td>
-      //<td>{this.props.player.charClass}</td>
+      <td><TeamMemberDeath alive={this.props.player.alive} /></td>
+      <td>{this.props.player.charClass}</td>
       <td>{this.props.player.score}</td>
       </tr>
     );
