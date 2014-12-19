@@ -10,13 +10,19 @@ var socketHandler = {
       Actions.reset();
     });
 
-    socket.on('player_add', Actions.player_add);
-    socket.on('player_delete', Actions.player_delete);
-    socket.on('player_update', Actions.player_update);
-    socket.on('player_death', Actions.player_death);
-    socket.on('team_update', Actions.team_update);
-    socket.on('scoreboard_init', Actions.scoreboard_init);
-    socket.on('scoreboard_reset', Actions.scoreboard_reset);
+    socket.on('messages_from_server', function(messages) {
+      messages.forEach(Actions.messageReceive);
+    });
+
+    socket.on('message_from_server', Actions.messageReceive);
+
+    socket.on('player_add', Actions.playerAdd);
+    socket.on('player_delete', Actions.playerDelete);
+    socket.on('player_update', Actions.playerUpdate);
+    socket.on('player_death', Actions.playerDeath);
+    socket.on('team_update', Actions.teamUpdate);
+    socket.on('scoreboard_init', Actions.scoreboardInit);
+    socket.on('scoreboard_reset', Actions.scoreboardReset);
   }
 };
 

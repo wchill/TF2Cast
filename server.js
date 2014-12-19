@@ -1,23 +1,17 @@
-var express = require('express')
-  , bodyParser      = require('body-parser');
-  //, json            = require('json')
-  //, urlencode       = require('urlencode');
-
-var Steam = require('./js/utils/steam');
-var Constants = require('./js/constants/Constants');
-var xhr = require('./utils/xhr');
-
+var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 var server = require('http').Server(app);
 server.listen(8000);
 var io = require('socket.io')(server);
-//var request = require('request');
 
 app.use(bodyParser());
 
+var xhr = require('./utils/xhr');
+var Steam = require('./js/utils/steam');
+var Constants = require('./js/constants/Constants');
 
-
-var _messages = [];
+var _messages = [{text: 'Welcome to the Team Fortress 2 Stream!', id: 0}];
 var _players = {};
 var _teamScores = [0, 0, 0];
 
@@ -29,15 +23,21 @@ var _teamScores = [0, 0, 0];
 
 // Player: {
 //   player: string
-//   team: int // ???
+//   team: int
 //   name: string
 //   score: int
 //   avatar: string // URL
 //   dead: boolean,
-//   charClass: ""
+//   charClass: string
 // }
 
-var resetScoreboardState = function() {
+function resetMessages() {
+  _messages = [
+    {text: 'Welcome to the Team Fortress 2 Stream!', id: 0}
+  ];
+}
+
+var resetScoreboard = function() {
   _players = {};
   _teamScores = [0, 0, 0];
 
@@ -153,7 +153,8 @@ app.post('/api/private/bootstrap', function(req, res) {
   }
 
   if (!_errors.length) {
-    resetScoreboardState();
+    resetMessages();
+    resetScoreboard();
 
     updateTeamScore(Constants.RED, b.red_wins);
     updateTeamScore(Constants.BLU, b.blu_wins);

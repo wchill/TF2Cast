@@ -42,6 +42,12 @@ AppDispatcher.register(function(payload) {
       MessageStore.emitChange();
       break;
 
+    case Constants.MESSAGE_RECEIVE:
+      action.message.id = id++;
+      addMessage(action.message);
+      MessageStore.emitChange();
+      break;
+
     case Constants.PLAYER_DEATH:
       addMessage({
         data: action,

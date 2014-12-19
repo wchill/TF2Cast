@@ -9,7 +9,8 @@ module.exports = keyMirror({
   PLAYER_DEATH: null,
   TEAM_UPDATE: null,
   SCOREBOARD_INIT: null,
-  SCOREBOARD_RESET: null
+  SCOREBOARD_RESET: null,
+  MESSAGE_RECEIVE: null
 });
 
 module.exports.RED = 0;

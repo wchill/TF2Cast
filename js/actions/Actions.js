@@ -8,54 +8,61 @@ var Actions = {
     });
   },
 
-  player_add: function(data) {
+  playerAdd: function(data) {
     AppDispatcher.handleServerAction({
       type: Constants.PLAYER_ADD,
       message: data
     });
   },
 
-  player_delete: function(data) {
+  playerDelete: function(data) {
     AppDispatcher.handleServerAction({
       type: Constants.PLAYER_DELETE,
       message: data
     });
   },
 
-  player_update: function(data) {
+  playerUpdate: function(data) {
     AppDispatcher.handleServerAction({
       type: Constants.PLAYER_UPDATE,
       message: data
     });
   },
 
-  player_death: function(data) {
+  playerDeath: function(data) {
     AppDispatcher.handleServerAction({
       type: Constants.PLAYER_DEATH,
       message: data
     });
   },
 
-  team_update: function(data) {
+  teamUpdate: function(data) {
     AppDispatcher.handleServerAction({
       type: Constants.TEAM_UPDATE,
       message: data
     });
   },
 
-  scoreboard_init: function(data) {
+  scoreboardInit: function(data) {
     AppDispatcher.handleServerAction({
       type: Constants.SCOREBOARD_INIT,
       message: data
     });
   },
 
-  scoreboard_reset: function(data) {
+  scoreboardReset: function(data) {
     AppDispatcher.handleServerAction({
       type: Constants.SCOREBOARD_RESET,
       message: data
     });
   },
+
+  messageReceive: function(data) {
+    AppDispatcher.handleServerAction({
+      type: Constants.MESSAGE_RECEIVE,
+      message: data
+    });
+  }
 };
 
 module.exports = Actions;
