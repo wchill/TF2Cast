@@ -5,7 +5,7 @@ var _DEFAULT_CLASS = "../../static/img/noclass.png";
 
 var CharacterClassIcon = React.createClass({
   render: function() {
-    var charClass = this.props.player.charClass === "" ? _DEFAULT_CLASS : ("../../static/img/" + this.props.charClass + ".png");
+    var charClass = this.props.player.charClass === "" ? _DEFAULT_CLASS : ("../../static/img/" + this.props.charClass.toLowercase() + ".png");
     
     return (
       <img src={charClass} />
