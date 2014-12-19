@@ -17,7 +17,6 @@ function last_five(messages) {
 }
 
 function getState() {
-  console.log(TeamStore.getTeams());
   return {
     messages: last_five(MessageStore.getMessages()),
     teams: TeamStore.getTeams(),

@@ -9,6 +9,7 @@ var io = require('socket.io')(server);
 var request = require('request');
 app.use(bodyParser());
 var Steam = require('./js/utils/steam');
+var Constants = require('./js/constants/Constants');
 
 var _messages = [];
 
@@ -42,11 +43,11 @@ app.post('/api/private/bootstrap', function(req, res) {
   var b = req.body;
   var _errors = [];
 
-  if (b.red_players && b.blu_players && b.spectators) {
+  if (!(b.red_players && b.blu_players && b.spectators)) {
     _errors.push("Invalid team (or spectator) list.")
   }
 
-  var _map_time = b.map_time || -2;
+  var _map_time = b.map_time || 0;
   if (_map_time < -1) {
 	   _errors.push("Invalid map time.");
   }
@@ -61,11 +62,16 @@ app.post('/api/private/bootstrap', function(req, res) {
 	   _errors.push("Invalid number of BLU wins.");
   }
 
-  if (!Steam.isValidID3(b.player)) {
-    _errors.push("Invalid Steam ID(s)");
-  } else {
-    b.player = Steam.convertID3ToID64(b.player);
+  var tryConvertPlayerId = function(player) {
+    if (!Steam.isValidID3(player.player)) {
+      _errors.push("Invalid Steam ID(s).");
+    } else {
+      player.player = Steam.convertID3ToID64(player.player);
+    }
   }
+
+  b.red_players.forEach(tryConvertPlayerId);
+  b.blu_players.forEach(tryConvertPlayerId);
 
   if (!_errors.length) {
     io.emit('bootstrap', b);

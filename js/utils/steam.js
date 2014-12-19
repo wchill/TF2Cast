@@ -6,7 +6,7 @@ var _ID3_RE = /^\[U:1:([\d]+)\]$/;
 
 var Steam = {
   convertID3ToID64: function (id3) {
-    var modifier = steamID3.substring(5, steamID3.length-1);
+    var modifier = id3.substring(5, id3.length-1);
     return _ID64_BASE.add(modifier).toString();
   },
 
