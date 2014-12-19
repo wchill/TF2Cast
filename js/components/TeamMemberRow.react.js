@@ -11,7 +11,7 @@ var TeamMemberRow = React.createClass({
       <td><TeamMemberAvatar avatar={this.props.player.avatar} /></td>
       <td>{this.props.player.name}</td>
       <td><TeamMemberDeath alive={this.props.player.alive} /></td>
-      <td>CharacterClassIcon charClass={this.props.player.charClass}</td>
+      <td><CharacterClassIcon charClass={this.props.player.charClass} /></td>
       <td>{this.props.player.score}</td>
       </tr>
     );
