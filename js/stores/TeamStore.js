@@ -4,7 +4,9 @@ var Constants = require('../constants/Constants');
 var assign = require('react/lib/Object.assign');
 var socketHandler = require('../socketHandler');
 var Steam = require('../utils/steam');
+var xhr = require('../utils/xhr');
 
+var _BOT_RE = /^([\d]+)$/;
 
 // Team: {
 //   id: int
@@ -73,17 +75,24 @@ function addPlayersToTeam(players, teamid) {
     };
 
     // Not sure if we'll need to do this in a closure or not...
-    if (!isBot(player)) {
-      var url = Steam.getPlayerSummaryURL(player.player);
-      var userRequest = xhr('GET', url);
-      userRequest.success(function(data) {
-        _players[player.player].name = data.playername;
-        _players[player.player].avatar = data.avatar; // url to 32 x 32px
-      });
-      userRequest.error(function(data) {
-        _players[player.player].name = player.player;
-        // TODO Add default avatar in local assets folder
-      });
+    // console.log('asdf');
+    // if (!isBot(player)) {
+      // var url = Steam.getPlayerSummaryURL(player.player);
+
+      // var userRequest = xhr('GET', url);
+
+      // userRequest.success(function(data) {
+      //   _players[player.player].name = data.playername;
+      //   _players[player.player].avatar = data.avatar; // url to 32 x 32px
+      // });
+      // userRequest.error(function(data) {
+      //   _players[player.player].name = player.player;
+      //   // TODO Add default avatar in local assets folder
+      // });
+    // }
+
+    if(_BOT_RE.test(player.player) && player.player.length > 12) {
+      socketHandler.getPlayerSummary(player.player);
     }
 
   });
@@ -101,11 +110,6 @@ var TeamStore = assign({}, EventEmitter.prototype, {
 
   getSpectators: function() {
     return getTeam(_SPEC);
-  },
-
-  getPlayerName: function(str) {
-    console.log('calling...');
-    return "Bhuwan";
   },
 
   emitChange: function() {
@@ -208,7 +212,7 @@ AppDispatcher.register(function(payload) {
       }
       break;
 
-    case Constants.PLAYERS_SCORES:
+    case Constants.PLAYER_SCORES:
       console.log('PLAYER SCORES');
       if (message.hasOwnProperty('red_players') && message.hasOwnProperty('blu_players')) {
         message.red_players.forEach(function(red_player) {
@@ -243,6 +247,12 @@ AppDispatcher.register(function(payload) {
       } else {
         console.log("Malformed roundover event");
       }
+      break;
+    case Constants.PLAYER_SUMMARY:
+      console.log('PLAYER SUMMARY');
+      _players[message.player].name = message.name;
+      _players[message.player].avatar = message.avatar;
+      TeamStore.emitChange();
       break;
 
     default:

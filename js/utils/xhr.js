@@ -23,6 +23,10 @@ function xhr(type, url, data) {
     'Content-type',
     'application/json'
   );
+  request.setRequestHeader(
+    'Access-Control-Allow-Origin',
+    '*'
+  );
 
   request.onreadystatechange = function() {
     if (request.readyState === 4) {

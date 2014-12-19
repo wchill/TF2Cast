@@ -10,7 +10,8 @@ module.exports = keyMirror({
   RESET: null,
   RESPAWN: null,
   ROUND_OVER: null,
-  TEAM_SWITCH: null
+  TEAM_SWITCH: null,
+  PLAYER_SUMMARY: null
 });
 
 module.exports.RED = 0;

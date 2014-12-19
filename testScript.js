@@ -119,7 +119,11 @@ function bootstrap() {
               { player:left + '803' + right, score:0 },
               { player:left + '804' + right, score:0 }
             ],
-            spectators: []
+            spectators: [
+              { player:left + '798' + right, score:0 },
+              { player: 'JoseBot', score:0 }
+            ]
+            // spectators: []
         };
     xhr('POST', base_url + '/api/private/bootstrap', JSON.stringify(data))
       .success(function(d) {console.log(d);});
@@ -139,7 +143,7 @@ function kill1() {
     var data = {
             attacker: left + '801' + right,
             victim: left + '802' + right,
-            assister: 'nobody',
+            assister: '',
             weapon: 'gun',
             death_type: 'shot',
             victim_team: BLUE,
@@ -153,7 +157,7 @@ function kill2() {
     var data = {
             attacker: left + '803' + right,
             victim: left + '800' + right,
-            assister: 'nobody',
+            assister: '',
             weapon: 'knife',
             death_type: 'knifed',
             victim_team: RED,

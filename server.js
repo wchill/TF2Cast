@@ -10,6 +10,7 @@ var request = require('request');
 app.use(bodyParser());
 var Steam = require('./js/utils/steam');
 var Constants = require('./js/constants/Constants');
+var xhr = require('./utils/xhr');
 
 var _messages = [];
 
@@ -37,6 +38,29 @@ io.on('connection', function(socket) {
   socket.on('test_client', function(str) {
     io.emit('message_from_server', createMessage(str));
   });
+
+  socket.on('get_player_summary', function(player) {
+    var url = Steam.getPlayerSummaryURL(player);
+
+    var userRequest = xhr('GET', url);
+    
+    userRequest.success(function(data) {
+      var _player = data.response.players[0];
+      io.emit('player_summary', {
+        player: player,
+        name : _player.personaname,
+        avatar : _player.avatar
+      });
+    });
+    userRequest.error(function(data) {
+      io.emit('player_summary', {
+        player: player,
+        name : '',
+        avatar : ''
+      });
+      console.log('error');
+    });
+  })
 });
 
 app.post('/api/private/bootstrap', function(req, res) {
@@ -64,7 +88,7 @@ app.post('/api/private/bootstrap', function(req, res) {
 
   var tryConvertPlayerId = function(player) {
     if (!Steam.isValidID3(player.player)) {
-      _errors.push("Invalid Steam ID(s).");
+      return;
     } else {
       player.player = Steam.convertID3ToID64(player.player);
     }
@@ -72,6 +96,7 @@ app.post('/api/private/bootstrap', function(req, res) {
 
   b.red_players.forEach(tryConvertPlayerId);
   b.blu_players.forEach(tryConvertPlayerId);
+  b.spectators.forEach(tryConvertPlayerId);
 
   if (!_errors.length) {
     io.emit('bootstrap', b);
@@ -92,16 +117,16 @@ app.post('/api/private/death', function(req, res) {
 	   _errors.push("Attacker belongs to unknown team.");
   }
 
-  if (!isValidTeam(b.assister_team)) {
+  if (b.assister_team && !isValidTeam(b.assister_team)) {
 	   _errors.push("Assister belongs to unknown team.");
   }
 
   if (!Steam.areValidID3s([b.victiom, b.attacker, b.assister])) {
-    _errors.push("Invalid Steam ID(s).");
+    /* pass */
   } else {
     b.victim = Steam.convertID3ToID64(b.victim);
     b.attacker = Steam.convertID3ToID64(b.attacker);
-    b.assister = Steam.convertID3ToID64(b.assister);
+    if(b.assister) { b.assister = Steam.convertID3ToID64(b.assister); }
   }
 
   if(!_errors.length) {
@@ -120,7 +145,7 @@ app.post('/api/private/respawn', function(req, res) {
   }
 
   if (!Steam.isValidID3(b.player)) {
-    _errors.push("Invalid Steam ID(s).");
+    // _errors.push("Invalid Steam ID(s).");
   } else {
     b.player = Steam.convertID3ToID64(b.player);
   }
@@ -137,7 +162,7 @@ app.post('/api/private/connected', function(req, res) {
   var _errors = [];
 
   if (!Steam.isValidID3(b.player)) {
-    _errors.push("Invalid Steam ID(s).");
+    // _errors.push("Invalid Steam ID(s).");
   } else {
     b.player = Steam.convertID3ToID64(b.player);
   }
@@ -158,7 +183,7 @@ app.post('/api/private/disconnected', function(req, res) {
   }
 
   if (!Steam.isValidID3(b.player)) {
-    _errors.push("Invalid Steam ID(s).");
+    // _errors.push("Invalid Steam ID(s).");
   } else {
     b.player = Steam.convertID3ToID64(b.player);
   }
@@ -179,7 +204,7 @@ app.post('/api/private/teamswitch', function(req, res) {
   }
 
   if (!Steam.isValidID3(b.player)) {
-    _errors.push("Invalid Steam ID(s).");
+    // _errors.push("Invalid Steam ID(s).");
   } else {
     b.player = Steam.convertID3ToID64(b.player);
   }
@@ -200,7 +225,7 @@ app.post('/api/private/playerscores', function(req, res) {
 
   var tryConvertPlayerId = function(player) {
     if (!Steam.isValidID3(player.player)) {
-      _errors.push("Invalid Steam ID(s).");
+      return;
     } else {
       player.player = Steam.convertID3ToID64(player.player);
     }

@@ -42,6 +42,11 @@ var socketHandler = {
     socket.on('teamswitch', Actions.teamswitch);
     socket.on('playerscores', Actions.playerscores);
     socket.on('roundover', Actions.roundover);
+    socket.on('player_summary', Actions.player_summary);
+  },
+
+  getPlayerSummary: function(playerid) {
+    socket.emit('get_player_summary', playerid);
   }
 };
 

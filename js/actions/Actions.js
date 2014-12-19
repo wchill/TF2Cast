@@ -69,6 +69,13 @@ var Actions = {
       type: Constants.MESSAGE_RECEIVE,
       message: data
     });
+  },
+
+  player_summary: function(data) {
+    AppDispatcher.handleServerAction({
+      type: Constants.PLAYER_SUMMARY,
+      message: data
+    });
   }
 
 };

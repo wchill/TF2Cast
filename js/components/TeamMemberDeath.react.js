@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react');
 
-var _DEFAULT_DEATH = "../../static/img/tf2_dead.jpg";
+var _DEFAULT_DEATH = "../../static/img/tf2_dead.png";
 
 var TeamMemberDeath = React.createClass({
   render: function() {
