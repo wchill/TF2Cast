@@ -2,15 +2,15 @@ var keyMirror = require('react/lib/keyMirror');
 
 module.exports = keyMirror({
   CHANGE_EVENT: null,
-  RESET: null,
+  MESSAGE_RECEIVE: null,
   PLAYER_ADD: null,
   PLAYER_DELETE: null,
   PLAYER_UPDATE: null,
   PLAYER_DEATH: null,
-  TEAM_UPDATE: null,
+  RESET: null,
   SCOREBOARD_INIT: null,
   SCOREBOARD_RESET: null,
-  MESSAGE_RECEIVE: null
+  TEAM_UPDATE: null
 });
 
 module.exports.RED = 0;

@@ -12,31 +12,29 @@ var Steam = require('./js/utils/steam');
 var Constants = require('./js/constants/Constants');
 
 var _messages = [{text: 'Welcome to the Team Fortress 2 Stream!', id: 0}];
+
+/*
+  Player Object => {
+     player: string    // SteamID64 (or bot name in the case of a bot)
+     team: int         // Team ID (Red, Blu, or Spectator)
+     name: string      // Steam Persona Name
+     score: int        // The player's in-game score
+     avatar: string    // URL to the player's Steam avatar
+     alive: boolean,   // Flag to signal a player is dead
+     charClass: string // The name of their character's class in TF2
+  }
+*/
 var _players = {};
 var _teamScores = [0, 0, 0];
 
-// Team: {
-//   id: int
-//   players: map <playerid, player>
-//   score: int
-// }
-
-// Player: {
-//   player: string
-//   team: int
-//   name: string
-//   score: int
-//   avatar: string // URL
-//   dead: boolean,
-//   charClass: string
-// }
-
+// Resets the message state
 function resetMessages() {
   _messages = [
     {text: 'Welcome to the Team Fortress 2 Stream!', id: 0}
   ];
 }
 
+// Resets the scoreboard state
 var resetScoreboard = function() {
   _players = {};
   _teamScores = [0, 0, 0];
@@ -44,20 +42,27 @@ var resetScoreboard = function() {
   io.emit('scoreboard_reset', {});
 };
 
+// Validates a team ID
 var isValidTeam = function(teamid) {
   return Constants.VALID_TEAM.indexOf(teamid) > -1;
 };
 
+// Checks whether a player id is in the format of a SteamID3 id, which would
+// imply that it's not a bot
 var isBot = function(playerid) {
   return !Steam.isValidID3(playerid);
 };
 
+// Convert SteamID3 to SteamID64
 var convertPlayerId = function(player) {
   if (Steam.isValidID3(player.player)) {
     player.player = Steam.convertID3ToID64(player.player);
   }
 };
 
+// Create a default player object with sane defaults
+// Note: The 'name' is TBD for real players (until the Steam API returns).
+//       The 'charClass' is TBD until a respawn event is initiated
 var createDefaultPlayer = function(player, teamid) {
   return {
     player: player.player,
@@ -66,16 +71,19 @@ var createDefaultPlayer = function(player, teamid) {
     score: player.score || 0,
     team: teamid,
     alive: true,
-    charClass: player.charClass || ''
+    charClass: player.charClass || 'Unknown'
   };
 };
 
+// Given a player object from Steam, extract the persona name and avatar
 var updatePlayerSteamData = function (player, steam) {
   var p = steam.response.players[0];
   _players[player].name = p.personaname;
   _players[player].avatar = p.avatar;
-}
+};
 
+// Add each player to the associated team while making sure
+// to retrieve the appropriate Steam information, etc.
 var addPlayersToTeam = function(players, teamid) {
   players.forEach(function(player) {
     var playerID3 = player.player; // Steam ID in ID3 format (or bot name)
@@ -104,18 +112,21 @@ var addPlayersToTeam = function(players, teamid) {
 };
 
 var updateTeamScore = function(team, score) {
-  _teamScores[team] = score;
+  if (_teamScores.hasOwnProperty(team)) {
+    _teamScores[team] = score;
 
-  io.emit('team_update', {
-    team: team,
-    score: _teamScores[team]
-  });
+    io.emit('team_update', {
+      team: team,
+      score: _teamScores[team]
+    });
+  }
 };
 
 var _updatePlayerScoreHelper = function(player, score) {
-  _players[player].score = score;
-
-  io.emit('player_update', _players[player]);
+  if (_players.hasOwnProperty(player)) {
+    _players[player].score = score;
+    io.emit('player_update', _players[player]);
+  }
 };
 
 var updatePlayerScore = function(data) {
@@ -219,6 +230,10 @@ app.post('/api/private/respawn', function(req, res) {
     b.player = Steam.convertID3ToID64(b.player);
   }
 
+  if (!_players.hasOwnProperty(b.player)) {
+    _errors.push("Player doesn't exist.")
+  }
+
   if (!_errors.length) {
     _players[b.player].alive = true;
     _players[b.player].charClass = b.charClass;
@@ -256,6 +271,10 @@ app.post('/api/private/disconnected', function(req, res) {
     b.player = Steam.convertID3ToID64(b.player);
   }
 
+  if (!_players.hasOwnProperty(b.player)) {
+    _errors.push("Player doesn't exist.")
+  }
+
   if (!_errors.length) {
     io.emit('player_delete', _players[b.player]);
     delete _players[b.player];
@@ -276,6 +295,10 @@ app.post('/api/private/teamswitch', function(req, res) {
 
   if (Steam.isValidID3(b.player)) {
     b.player = Steam.convertID3ToID64(b.player);
+  }
+
+  if (!_players.hasOwnProperty(b.player)) {
+    _errors.push("Player doesn't exist.")
   }
 
   if (!_errors.length) {
