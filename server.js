@@ -20,17 +20,6 @@ function isValidTeam(teamid) {
   return [Constants.RED, Constants.BLU, Constants.SPEC].indexOf(teamid) > -1;
 }
 
-function resetMessages() {
-  _messages = [
-    {text: 'Welcome to team fortress 2 Stream!', id: 0}
-  ];
-}
-
-function resetTeams() {
-  _players = {};
-  _teamScores = [0, 0, 0];
-}
-
 function isBot(playerid) {
   return !Steam.isValidID3(playerid);
 }
@@ -68,46 +57,27 @@ function addPlayersToTeam(players, teamid) {
         _players[player.player].name = _player.personaname;
         _players[player.player].avatar = _player.avatar;
       });
-      userRequest.error(function(data) {
-        _players[player.player].name = '';
-        _players[player.player].avatar = '';
-      });
     }
 
   });
 }
 
-
-
 app.use('/', express.static(__dirname));
 
 io.on('connection', function(socket) {
+  // Don't reset on new client connection
   socket.emit('messages_from_server', _messages);
   socket.emit('tf2_init', {players: _players, teamScores: _teamScores});
 
-  // TODO This can be removed probably
-  socket.on('test_client', function(str) {
-    io.emit('message_from_server', createMessage(str));
-  });
-
   socket.on('get_player_summary', function(player) {
     var url = Steam.getPlayerSummaryURL(player);
-
     var userRequest = xhr('GET', url);
-    
     userRequest.success(function(data) {
       var _player = data.response.players[0];
       io.emit('player_summary', {
         player: player,
         name : _player.personaname,
         avatar : _player.avatar
-      });
-    });
-    userRequest.error(function(data) {
-      io.emit('player_summary', {
-        player: player,
-        name : '',
-        avatar : ''
       });
     });
   })
@@ -285,14 +255,9 @@ app.post('/api/private/playerscores', function(req, res) {
   if (!_errors.length) {
     console.log('PLAYER SCORES');
     b.red_players.forEach(function(red_player) {
-      console.log("red_player");
-      console.log(red_player);
-      console.log("players");
-      console.log(_players);
       if (red_player.hasOwnProperty('player')
         && red_player.hasOwnProperty('score')
         && _players.hasOwnProperty(red_player.player)) {
-
         _players[red_player.player].score = red_player.score;
       }
     });

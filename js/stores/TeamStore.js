@@ -62,7 +62,6 @@ function getTeam(teamid) {
 }
 
 function addPlayersToTeam(players, teamid) {
-  console.log(players);
   players.forEach(function(player) {
     _players[player.player] = {
       player: player.player,
@@ -73,8 +72,7 @@ function addPlayersToTeam(players, teamid) {
       alive: true,
       charClass: player.charClass || ''
     };
-
-    console.log(player.player)
+    
     if(!isBot(player.player)) {
       socketHandler.getPlayerSummary(player.player);
     }
