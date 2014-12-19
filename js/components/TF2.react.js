@@ -1,14 +1,36 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-
 var Scoreboard = require('../components/Scoreboard.react');
 var Notifications = require('../components/Notifications.react');
 var Spectators = require('../components/Spectators.react')
-
 var MessageStore = require('../stores/MessageStore');
 var TeamStore = require('../stores/TeamStore');
 
+// React Components:
+// - Scoreboard - contains the entirety of the match data
+// - Team - displays the entirety of a team's match data
+// - TeamOverview - displays basic team information (e.g. color, name, score, size)
+// - TeamMemberTable - displays the match data for a team's members
+// - TeamMemberRow - displays a row for each team member
+// - TeamMemberAvatar - displays the player's Steam avatar or a default one
+// - TeamMemberDeath - displays a killed icon
+// - CharacterClassIcon - displays a player's character class icon
+// - Spectators - displays all the spectators in a comma separated list
+// - Messages - displays the latest 5 kills in the game (in real time)
+
+// React Component Hierarchy:
+// - TF2
+//   - Scoreboard
+//       - Team
+//           - TeamOverview
+//           - TeammateTable
+//             - TeamMemberRow
+//               - TeamMemberAvatar
+//               - TeamMemberDeath
+//               - CharacterClassIcon
+// - Spectators
+// - Messages
 
 function lastFive(messages) {
   if (messages.length <= 5) {

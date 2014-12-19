@@ -3,22 +3,25 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var assign = require('react/lib/Object.assign');
 var Constants = require('../constants/Constants');
 
-
-var _BOT_RE = /^([\d]+)$/; // Verify steamID64 format
-
+// Regex to verify steamID64 format
+var _BOT_RE = /^([\d]+)$/;
+// [RED, BLU, SPEC]
+var _teamScores = [0, 0, 0];
 var _players = {};
-var _teamScores = [0, 0, 0]; // [RED, BLU, SPEC]
 
+// Reset the TeamStore data
 function reset() {
   _players = {};
   _teamScores = [0, 0, 0];
 }
 
+// A bot ID does not have a steam ID. So its ID is it's 'persona name'.
 function isBot(playerid) {
   return !(_BOT_RE.test(playerid) && playerid.length > 12);
 }
 
-// Take an object and return an array containing the values in that object.
+// Given an object, return an array containing the values in that object
+// (for all of its own properties).
 function playersToArray() {
   var a = [];
 
@@ -81,13 +84,6 @@ AppDispatcher.register(function(payload) {
   var message = action.message;
 
   switch(type) {
-    case Constants.RESET:
-      console.log('TEAM STORE: Reset');
-      //reset();
-
-      //TeamStore.emitChange();
-      break;
-
     case Constants.PLAYER_ADD:
       console.log('TEAM STORE: Player Add');
 
@@ -114,9 +110,9 @@ AppDispatcher.register(function(payload) {
 
     case Constants.TEAM_UPDATE:
       console.log('TEAM STORE: Team Update');
+
       var team = message.team;
       var score = message.score;
-
       _teamScores[team] = score;
 
       TeamStore.emitChange();
@@ -133,6 +129,7 @@ AppDispatcher.register(function(payload) {
 
     case Constants.SCOREBOARD_RESET:
       console.log('TEAM STORE: Scoreboard Reset');
+
       reset();
 
       TeamStore.emitChange();

@@ -1,5 +1,3 @@
-// var Constants = require('./js/constants/Constants');
-
 function parseIfJSON(data) {
   try {
     return JSON.parse(data);
@@ -52,78 +50,31 @@ function xhr(type, url, data) {
 
 var base_url = "http://localhost:8000"
 
-var TEAMS = [
-  {
-    "name": "BLU",
-    "score": 8,
-    "members": [
-      { "name": "Jumping up an down", "charClass": "Demoman", "avatar": "A", "score": 160, "alive": true },
-      { "name": "santa", "charClass": "Demoman", "avatar": "", "score": 110, "alive": true },
-      { "name": "IzuKel", "charClass": "Soldier", "avatar": "C", "score": 109, "alive": true },
-      { "name": "muiranimuL", "charClass": "Pyro", "avatar": "D", "score": 102, "alive": true },
-      { "name": "Sitzkreig", "charClass": "Spy", "avatar": "E", "score": 99, "alive": true },
-      { "name": "Froze", "charClass": "Medic", "avatar": "F", "score": 72, "alive": true },
-      { "name": "dean", "charClass": "Heavy", "avatar": "G", "score": 43, "alive": true },
-      { "name": "FIR", "charClass": "Scout", "avatar": "H", "score": 2, "alive": false },
-      { "name": "TemaZ", "charClass": "Soldier", "avatar": "I", "score": 2, "alive": false },
-      { "name": "still alive", "charClass": "Engineer", "avatar": "", "score": 2, "alive": true },
-      { "name": "Don-Don", "charClass": "Soldier", "avatar": "", "score": 1, "alive": true }
-    ]
-  },
-
-  {
-    "name": "RED",
-    "score": 6,
-    "members": [
-      { "name": "Danightmare", "charClass": "Demoman", "avatar": "A", "score": 129, "alive": false },
-      { "name": "Mitsuomi", "charClass": "Demoman", "avatar": "B", "score": 88, "alive": true },
-      { "name": "Silver Sand", "charClass": "Soldier", "avatar": "C", "score": 86, "alive": false },
-      { "name": "DeaTH", "charClass": "Pyro", "avatar": "D", "score": 50, "alive": false },
-      { "name": "the Sentry of Duality", "charClass": "Spy", "avatar": "", "score": "44", "alive": true },
-      { "name": "Zhao Yun", "charClass": "Medic", "avatar": "F", "score": 10, "alive": true },
-      { "name": "InSidiousGG", "charClass": "Heavy", "avatar": "G", "score": 7, "alive": true },
-      { "name": "dKiWi", "charClass": "Scout", "avatar": "H", "score": "0", "alive": true },
-      { "name": "Pikachu", "charClass": "Soldier", "avatar": "", "score": 0, "alive": true },
-      { "name": "frontier", "charClass": "Engineer", "avatar": "", "score": 0, "alive": true }
-    ]
-  }
-];
 
 // change names to '[U:1:XXXXXX]'
-
 // range from 799 to 804 for middle should be valud
 var left = '[U:1:169';
 var right = ']';
-
-  // { player:Danightmare, id:799 },
-  // { player:Mitsuomi + right, id:800 },
-  // { player:DeaTH, id:801 }
-
-  // { player:santa, id:802 },
-  // { player:IzuKel, id:803 },
-  // { player:muiranimuL, id:804 }
-
-
-var RED = 0;//Constants.RED;
-var BLUE = 1;//Constants.BLU;
+var RED = 0;
+var BLUE = 1;
 
 function bootstrap() {
     var data = {
             red_wins: 7,
             blu_wins: 3,
             red_players: [
-              { player:left + '799' + right, score:0 },
-              { player:left + '800' + right, score:0 },
-              { player:left + '801' + right, score:0 }
+              { player:left + '799' + right, score:0, charClass: "Engineer" },
+              { player:left + '800' + right, score:0, charClass: "Heavy" },
+              { player:left + '801' + right, score:0, charClass: "Medic" }
             ],
             blu_players: [
-              { player:left + '802' + right, score:0 },
-              { player:left + '803' + right, score:0 },
-              { player:left + '804' + right, score:0 }
+              { player:left + '802' + right, score:0, charClass: "Soldier" },
+              { player:left + '803' + right, score:0, charClass: "Spy" },
+              { player:left + '804' + right, score:0, charClass: "Medic" }
             ],
             spectators: [
-              { player:left + '798' + right, score:0 },
-              { player: 'JoseBot', score:0 }
+              { player:left + '798' + right, score:0, charClass: "Heavy" },
+              { player: 'JoseBot', score:0, charClass: "Engineer" }
             ]
         };
     xhr('POST', base_url + '/api/private/bootstrap', JSON.stringify(data));
@@ -170,7 +121,8 @@ function kill2() {
 function connect1() {
     var data = {
             player: left + '799' + right,
-            team: RED
+            team: RED,
+            charClass: "Engineer"
         };
     xhr('POST', base_url + '/api/private/connected', JSON.stringify(data));
 }
@@ -178,7 +130,8 @@ function connect1() {
 function connect2() {
     var data = {
             player: left + '800' + right,
-            team: RED
+            team: RED,
+            charClass: "Heavy"
         };
     xhr('POST', base_url + '/api/private/connected', JSON.stringify(data));
 }
@@ -186,7 +139,8 @@ function connect2() {
 function connect3() {
     var data = {
             player: left + '801' + right,
-            team: RED
+            team: RED,
+            charClass: "Medic"
         };
     xhr('POST', base_url + '/api/private/connected', JSON.stringify(data));
 }
@@ -194,7 +148,8 @@ function connect3() {
 function connect4() {
     var data = {
             player: left + '802' + right,
-            team: BLUE
+            team: BLUE,
+            charClass: "Soldier"
         };
     xhr('POST', base_url + '/api/private/connected', JSON.stringify(data));
 }
@@ -202,7 +157,8 @@ function connect4() {
 function connect5() {
     var data = {
             player: left + '803' + right,
-            team: BLUE
+            team: BLUE,
+            charClass: "Spy"
         };
     xhr('POST', base_url + '/api/private/connected', JSON.stringify(data));
 }
@@ -210,7 +166,8 @@ function connect5() {
 function connect6() {
     var data = {
             player: left + '804' + right,
-            team: BLUE
+            team: BLUE,
+            charClass: "Medic"
         };
     xhr('POST', base_url + '/api/private/connected', JSON.stringify(data));
 }
@@ -218,7 +175,8 @@ function connect6() {
 function disconnect1() {
     var data = {
             player: left + '799' + right,
-            team: RED
+            team: RED,
+            charClass: "Engineer"
         };
     xhr('POST', base_url + '/api/private/disconnected', JSON.stringify(data));
 }
@@ -226,7 +184,8 @@ function disconnect1() {
 function disconnect2() {
     var data = {
             player: left + '800' + right,
-            team: RED
+            team: RED,
+            charClass: "Heavy"
         };
     xhr('POST', base_url + '/api/private/disconnected', JSON.stringify(data));
 }
@@ -234,7 +193,8 @@ function disconnect2() {
 function disconnect3() {
     var data = {
             player: left + '801' + right,
-            team: RED
+            team: RED,
+            charClass: "Medic"
         };
     xhr('POST', base_url + '/api/private/disconnected', JSON.stringify(data));
 }
@@ -242,7 +202,8 @@ function disconnect3() {
 function disconnect4() {
     var data = {
             player: left + '802' + right,
-            team: BLUE
+            team: BLUE,
+            charClass: "Soldier"
         };
     xhr('POST', base_url + '/api/private/disconnected', JSON.stringify(data));
 }
@@ -250,7 +211,8 @@ function disconnect4() {
 function disconnect5() {
     var data = {
             player: left + '803' + right,
-            team: BLUE
+            team: BLUE,
+            charClass: "Spy"
         };
     xhr('POST', base_url + '/api/private/disconnected', JSON.stringify(data));
 }
@@ -258,7 +220,8 @@ function disconnect5() {
 function disconnect6() {
     var data = {
             player: left + '804' + right,
-            team: BLUE
+            team: BLUE,
+            charClass: "Medic"
         };
     xhr('POST', base_url + '/api/private/disconnected', JSON.stringify(data));
 }
@@ -266,7 +229,8 @@ function disconnect6() {
 function teamSwitch1() {
     var data = {
             player: left + '799' + right,
-            team: 0
+            team: 0,
+            charClass: "Engineer"
         };
     xhr('POST', base_url + '/api/private/teamswitch', JSON.stringify(data));
 }
@@ -274,40 +238,78 @@ function teamSwitch1() {
 function teamSwitch2() {
     var data = {
             player: left + '799' + right,
-            team: 1
+            team: 1,
+            charClass: "Engineer"
         };
     xhr('POST', base_url + '/api/private/teamswitch', JSON.stringify(data));
 }
 
 function respawn1() {
-    var data = {
-            player: left + '802' + right,
-            class: 'gifter',
-            team: RED
-        };
-    xhr('POST', base_url + '/api/private/respawn', JSON.stringify(data));
+  var data = {
+    player: left + '799' + right,
+    team: RED,
+    charClass: "Engineer"
+  };
+  xhr('POST', base_url + '/api/private/respawn', JSON.stringify(data));
 }
 
 function respawn2() {
+  var data = {
+    player: left + '800' + right,
+    team: BLUE,
+    charClass: "Heavy"
+  };
+  xhr('POST', base_url + '/api/private/respawn', JSON.stringify(data));
+}
+
+
+function respawn3() {
     var data = {
-            player: left + '800' + right,
-            class: 'elf',
-            team: BLUE
-        };
+      player: left + '801' + right,
+      team: RED,
+      charClass: "Medic"
+    };
     xhr('POST', base_url + '/api/private/respawn', JSON.stringify(data));
+}
+
+function respawn4() {
+    var data = {
+      player: left + '802' + right,
+      team: BLUE,
+      charClass: "Soldier"
+    };
+    xhr('POST', base_url + '/api/private/respawn', JSON.stringify(data));
+}
+
+function respawn5() {
+  var data = {
+    player: left + '803' + right,
+    team: BLUE,
+    charClass: "Spy"
+  };
+  xhr('POST', base_url + '/api/private/respawn', JSON.stringify(data));
+}
+
+function respawn6() {
+  var data = {
+    player: left + '804' + right,
+    team: BLUE,
+    charClass: "Medic"
+  };
+  xhr('POST', base_url + '/api/private/respawn', JSON.stringify(data));
 }
 
 function playerScores() {
     var data = {
             red_players: [
-              { player:left + '799' + right, score:4 },
-              { player:left + '800' + right, score:5 },
-              { player:left + '801' + right, score:6 }
+              { player:left + '799' + right, score:4, charClass: "Engineer" },
+              { player:left + '800' + right, score:5, charClass: "Heavy" },
+              { player:left + '801' + right, score:6, charClass: "Medic" }
             ],
             blu_players: [
-              { player:left + '802' + right, score:7 },
-              { player:left + '803' + right, score:8 },
-              { player:left + '804' + right, score:9 }
+              { player:left + '802' + right, score:7, charClass: "Soldier" },
+              { player:left + '803' + right, score:8, charClass: "Spy" },
+              { player:left + '804' + right, score:9, charClass: "Medic" }
             ]
         };
     xhr('POST', base_url + '/api/private/playerscores', JSON.stringify(data));
