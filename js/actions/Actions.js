@@ -52,7 +52,7 @@ var Actions = {
 
   playerscores: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.PLAYERS_SCORES,
+      type: Constants.PLAYER_SCORES,
       message: data
     });
   },

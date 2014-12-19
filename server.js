@@ -58,7 +58,6 @@ io.on('connection', function(socket) {
         name : '',
         avatar : ''
       });
-      console.log('error');
     });
   })
 });

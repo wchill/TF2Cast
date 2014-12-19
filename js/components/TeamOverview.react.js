@@ -1,10 +1,11 @@
 /** @jsx React.DOM */
 var React = require('react');
+var Constants = require('../constants/Constants');
 
 var TeamOverview = React.createClass({
   render: function() {
     var playerCount = this.props.team.players.length;
-    var name = this.props.team.id === 0 ? "RED" : "BLU";
+    var name = this.props.team.id === Constants.RED ? "RED" : "BLU";
 
     return (
       <div className="panel-heading>">

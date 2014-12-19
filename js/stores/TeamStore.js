@@ -36,7 +36,8 @@ function reset() {
 }
 
 function isBot(playerid) {
-  return !Steam.isValidID3(playerid);
+  // return !Steam.isValidID3(playerid);
+  return !(_BOT_RE.test(playerid) && playerid.length > 12);
 }
 
 function playersToArray() {
@@ -68,30 +69,13 @@ function addPlayersToTeam(players, teamid) {
       id: player.player,
       name: isBot(player) ? player.player : '',
       avatar: '',
-      score: player.score,
+      score: player.score || 0,
       team: teamid,
       alive: true,
-      charClass: player.charClass
+      charClass: player.charClass || ''
     };
 
-    // Not sure if we'll need to do this in a closure or not...
-    // console.log('asdf');
-    // if (!isBot(player)) {
-      // var url = Steam.getPlayerSummaryURL(player.player);
-
-      // var userRequest = xhr('GET', url);
-
-      // userRequest.success(function(data) {
-      //   _players[player.player].name = data.playername;
-      //   _players[player.player].avatar = data.avatar; // url to 32 x 32px
-      // });
-      // userRequest.error(function(data) {
-      //   _players[player.player].name = player.player;
-      //   // TODO Add default avatar in local assets folder
-      // });
-    // }
-
-    if(_BOT_RE.test(player.player) && player.player.length > 12) {
+    if(!isBot(player.player)) {
       socketHandler.getPlayerSummary(player.player);
     }
 
@@ -105,7 +89,11 @@ var TeamStore = assign({}, EventEmitter.prototype, {
   },
 
   getPlayerName: function(playerid) {
+    if(!isBot(playerid)) {
       return _players[playerid].name;
+    } else {
+      return playerid;
+    }
   },
 
   getSpectators: function() {
@@ -182,7 +170,7 @@ AppDispatcher.register(function(payload) {
     case Constants.CONNECTED:
       console.log('CONNECTED');
       if (message.hasOwnProperty('player') && message.hasOwnProperty('team')) {
-        addPlayersToTeam([message.player], message.team);
+        addPlayersToTeam([{player: message.player}], message.team);
         TeamStore.emitChange();
       } else {
         console.log("Malformed connected event");
@@ -193,7 +181,7 @@ AppDispatcher.register(function(payload) {
       console.log('DISCONNECTED');
 
       // TODO Is this desired?
-      if (message.hasOwnPropery('player')) {
+      if (message.hasOwnProperty('player')) {
         delete _players[message.player];
         TeamStore.emitChange();
       } else {
@@ -222,7 +210,7 @@ AppDispatcher.register(function(payload) {
         });
 
         message.blu_players.forEach(function(blu_player) {
-          if (blu_player.hasOwnPropert('player') && blu_player.hasOwnProperty('score')) {
+          if (blu_player.hasOwnProperty('player') && blu_player.hasOwnProperty('score')) {
             _players[blu_player.player].score = blu_player.score;
           }
         });

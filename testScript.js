@@ -1,3 +1,5 @@
+// var Constants = require('./js/constants/Constants');
+
 function parseIfJSON(data) {
   try {
     return JSON.parse(data);
@@ -102,8 +104,8 @@ var right = ']';
   // { player:muiranimuL, id:804 }
 
 
-var RED = 1;
-var BLUE = 0;
+var RED = 0;//Constants.RED;
+var BLUE = 1;//Constants.BLU;
 
 function bootstrap() {
     var data = {
@@ -125,8 +127,7 @@ function bootstrap() {
             ]
             // spectators: []
         };
-    xhr('POST', base_url + '/api/private/bootstrap', JSON.stringify(data))
-      .success(function(d) {console.log(d);});
+    xhr('POST', base_url + '/api/private/bootstrap', JSON.stringify(data));
 
 }
 
@@ -141,7 +142,7 @@ function roundOver() {
 
 function kill1() {
     var data = {
-            attacker: left + '801' + right,
+            attacker: left + '799' + right,
             victim: left + '802' + right,
             assister: '',
             weapon: 'gun',
@@ -247,9 +248,9 @@ function disconnect4() {
     xhr('POST', base_url + '/api/private/disconnected', JSON.stringify(data));
 }
 
-function discon3ect5() {
+function disconnect5() {
     var data = {
-            player: left + '800' + right,
+            player: left + '803' + right,
             team: BLUE
         };
     xhr('POST', base_url + '/api/private/disconnected', JSON.stringify(data));
@@ -310,5 +311,5 @@ function playerScores() {
               { player:left + '804' + right, score:9 }
             ]
         };
-    xhr('POST', base_url + '/api/private/respawn', JSON.stringify(data));
+    xhr('POST', base_url + '/api/private/playerscores', JSON.stringify(data));
 }

@@ -11,7 +11,6 @@ var isValidID3 = function (id3) {
 var Steam = {
   convertID3ToID64: function (id3) {
     var modifier = id3.substring(5, id3.length-1);
-    console.log(modifier);
     return _ID64_BASE.add(modifier).toString();
   },
 
