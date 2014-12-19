@@ -10,20 +10,13 @@ var socketHandler = {
       Actions.reset();
     });
 
-    socket.on('bootstrap', Actions.bootstrap);
-    socket.on('death', Actions.death);
-    socket.on('respawn', Actions.respawn);
-    socket.on('connected', Actions.connected);
-    socket.on('disconnected', Actions.disconnected);
-    socket.on('teamswitch', Actions.teamswitch);
-    socket.on('playerscores', Actions.playerscores);
-    socket.on('roundover', Actions.roundover);
-    socket.on('player_summary', Actions.player_summary);
-    socket.on('tf2_init', Actions.tf2_init);
-  },
-
-  getPlayerSummary: function(playerid) {
-    socket.emit('get_player_summary', playerid);
+    socket.on('player_add', Actions.player_add);
+    socket.on('player_delete', Actions.player_delete);
+    socket.on('player_update', Actions.player_update);
+    socket.on('player_death', Actions.player_death);
+    socket.on('team_update', Actions.team_update);
+    socket.on('scoreboard_init', Actions.scoreboard_init);
+    socket.on('scoreboard_reset', Actions.scoreboard_reset);
   }
 };
 

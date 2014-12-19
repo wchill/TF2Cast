@@ -1,20 +1,20 @@
 var keyMirror = require('react/lib/keyMirror');
 
 module.exports = keyMirror({
-  BOOTSTRAP: null,
   CHANGE_EVENT: null,
-  CONNECTED: null,
-  DEATH: null,
-  DISCONNECTED: null,
-  PLAYER_SCORES: null,
   RESET: null,
-  RESPAWN: null,
-  ROUND_OVER: null,
-  TEAM_SWITCH: null,
-  PLAYER_SUMMARY: null,
-  TF2_INIT: null
+  PLAYER_ADD: null,
+  PLAYER_DELETE: null,
+  PLAYER_UPDATE: null,
+  PLAYER_DEATH: null,
+  TEAM_UPDATE: null,
+  SCOREBOARD_INIT: null,
+  SCOREBOARD_RESET: null
 });
 
 module.exports.RED = 0;
 module.exports.BLU = 1;
 module.exports.SPEC = 2;
+module.exports.TIE = 3;
+module.exports.VALID_TEAM = [module.exports.RED, module.exports.BLU, module.exports.SPEC];
+module.exports.VALID_WINNING_TEAM = [module.exports.RED, module.exports.BLU, module.exports.TIE];

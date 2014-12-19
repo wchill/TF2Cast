@@ -8,76 +8,54 @@ var Actions = {
     });
   },
 
-  bootstrap: function(data) {
+  player_add: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.BOOTSTRAP,
+      type: Constants.PLAYER_ADD,
       message: data
     });
   },
 
-  death: function(data) {
+  player_delete: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.DEATH,
+      type: Constants.PLAYER_DELETE,
       message: data
     });
   },
 
-  respawn: function(data) {
+  player_update: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.RESPAWN,
+      type: Constants.PLAYER_UPDATE,
       message: data
     });
   },
 
-  connected: function(data) {
+  player_death: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.CONNECTED,
+      type: Constants.PLAYER_DEATH,
       message: data
     });
   },
 
-  disconnected: function(data) {
+  team_update: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.DISCONNECTED,
+      type: Constants.TEAM_UPDATE,
       message: data
     });
   },
 
-  teamswitch: function(data) {
+  scoreboard_init: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.TEAM_SWITCH,
+      type: Constants.SCOREBOARD_INIT,
       message: data
     });
   },
 
-  playerscores: function(data) {
+  scoreboard_reset: function(data) {
     AppDispatcher.handleServerAction({
-      type: Constants.PLAYER_SCORES,
+      type: Constants.SCOREBOARD_RESET,
       message: data
     });
   },
-
-  roundover: function(data) {
-    AppDispatcher.handleServerAction({
-      type: Constants.ROUND_OVER,
-      message: data
-    });
-  },
-
-  player_summary: function(data) {
-    AppDispatcher.handleServerAction({
-      type: Constants.PLAYER_SUMMARY,
-      message: data
-    });
-  },
-
-  tf2_init: function(data) {
-    AppDispatcher.handleServerAction({
-      type: Constants.TF2_INIT,
-      message: data
-    });
-  }
-
 };
 
 module.exports = Actions;

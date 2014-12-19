@@ -1,5 +1,6 @@
 var React = require('react');
-var TeamStore = require('../stores/TeamStore')
+var TeamStore = require('../stores/TeamStore');
+var Constants = require('../constants/Constants');
 
 var Messages = React.createClass({
 
@@ -8,20 +9,18 @@ var Messages = React.createClass({
       case 'death' :
         var data = message.data.message;
         data.attacker = TeamStore.getPlayerName(data.attacker);
-        data.victim = TeamStore.getPlayerName(data.victim)
-        if (data.attacker_team == 1) {
-          return <li key={message.id}>
-            <span className='redTeam'>{data.attacker}</span>
-            &nbsp;killed&nbsp;
-            <span className='blueTeam'>{data.victim}</span>
-          </li>;
-        } else {
-          return <li key={message.id}>
-            <span className='blueTeam'>{data.attacker}</span>
-            &nbsp;killed&nbsp;
-            <span className='redTeam'>{data.victim}</span>
-          </li>;
-        }
+        data.victim = TeamStore.getPlayerName(data.victim);
+
+        // Correctly color kills, suicides, and fratricide
+        var attacker_color = data.attacker_team === Constants.RED ? 'redTeam' : 'blueTeam';
+        var victim_color = data.victim_team === Constants.RED ? 'redTeam' : 'blueTeam';
+
+        return (<li key={message.id}>
+          <span className={attacker_color}>{data.attacker}</span>
+          &nbsp;killed&nbsp;
+          <span className={victim_color}>{data.victim}</span>
+        </li>);
+
       default:
         return <li key={message.id}>{message.text}</li>;
     }

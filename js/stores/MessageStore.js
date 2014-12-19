@@ -42,7 +42,7 @@ AppDispatcher.register(function(payload) {
       MessageStore.emitChange();
       break;
 
-    case Constants.DEATH:
+    case Constants.PLAYER_DEATH:
       addMessage({
         data: action,
         type: 'death',

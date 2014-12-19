@@ -1,14 +1,16 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+
 var Scoreboard = require('../components/Scoreboard.react');
 var Notifications = require('../components/Notifications.react');
 var Spectators = require('../components/Spectators.react')
+
 var MessageStore = require('../stores/MessageStore');
 var TeamStore = require('../stores/TeamStore');
-var xhr = require('../utils/xhr');
 
-function last_five(messages) {
+
+function lastFive(messages) {
   if (messages.length <= 5) {
     return messages;
   } else {
@@ -18,7 +20,7 @@ function last_five(messages) {
 
 function getState() {
   return {
-    messages: last_five(MessageStore.getMessages()),
+    messages: lastFive(MessageStore.getMessages()),
     teams: TeamStore.getTeams(),
     spectators: TeamStore.getSpectators()
   };

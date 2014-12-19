@@ -4,12 +4,6 @@ var React = require('react');
 var Team = require('../components/Team.react');
 var Constants = require('../constants/Constants');
 
-/******************************************************
- *
- * Static Version (i.e. no usage of STATE at all)
- *
- *******************************************************/
-
 // React Components:
 // - Scoreboard - contains the entirety of the match data
 // - Team - displays the entirety of a team's match data
