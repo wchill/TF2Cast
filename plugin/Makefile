@@ -1,6 +1,6 @@
 ROOT_DIR :=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-SOURCEMOD_DIR=/home/tf2server/sourcemod
+SOURCEMOD_DIR=/home/tf2server/serverfiles/tf/addons/sourcemod
 SCRIPTING_DIR=$(SOURCEMOD_DIR)/scripting
 COMPILER=$(SCRIPTING_DIR)/compile.sh
 COMPILED_DIR=$(SCRIPTING_DIR)/compiled
