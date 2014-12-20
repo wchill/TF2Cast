@@ -29,3 +29,34 @@ Example testing flow:
 * score update  
 * disconnect  
 * round over
+
+Sample videos:
+
+[How to test](https://drive.google.com/file/d/0Bw6EJN31sy-RTG5tVTh3U1FraTA/view?usp=sharing)
+server info is sent to defined as base_url in testScript.js
+
+[Live from steam](https://drive.google.com/file/d/0Bw6EJN31sy-RQzRaVTNxeWhPMU0/view?usp=sharing) (eric take down when you put yours up)
+
+(Live video stream from game)(link when ready)
+
+Technologies used:
+
+* React
+* Flux
+* Sockets
+* SourceMod
+* Steam api
+* javascript
+
+Contributions:
+
+* Eric: wrote plugin that goes into the game server and sends requests to the node server; hosted servers; designed project
+* Michael: Found images on internet to represent classes
+* Josh: Wrote scoreboard (components, actions, constants, team store, etc)
+* Paul: Wrote web-testing interface; Made kill feed
+
+Bhuwan: 
+http://tf2.intense.io:8000/ hosts live site, but wont have anything if game is not running.
+From top level directory, npm install to get node_modules, and npm start to start test server
+server at localhost:8000 , test interface at http://localhost:8000/test-interface.html
+After done testing, recommend Paul to facebook
