@@ -348,7 +348,7 @@ app.post('/api/private/roundover', function(req, res) {
     _errors.push("Invalid BLU score.");
   }
 
-  if (Constants.VALID_WINNING_TEAM.indexOf(b.winning_team) === -1) {
+  if (Constants.VALID_WINNING_TEAM.indexOf(+b.winning_team) === -1) {
 	   _errors.push("Invalid winning team.");
   }
 
