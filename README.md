@@ -32,18 +32,20 @@ Example testing flow:
 
 Sample videos:
 
-[How to test](https://drive.google.com/file/d/0Bw6EJN31sy-RTG5tVTh3U1FraTA/view?usp=sharing)
+[How to test](https://drive.google.com/file/d/0Bw6EJN31sy-RTG5tVTh3U1FraTA/view?usp=sharing)  
 server info is sent to defined as base_url in testScript.js
 
 [Live from steam](https://drive.google.com/file/d/0Bw6EJN31sy-RQzRaVTNxeWhPMU0/view?usp=sharing)
+
+[In-game demonstration](http://youtu.be/bLARwToWyxY)
 
 Technologies used:
 
 * React
 * Flux
 * Sockets
-* SourceMod
-* Steam api
+* SourceMod/SourcePawn
+* Steam API
 * javascript
 
 Contributions:
@@ -54,7 +56,7 @@ Contributions:
 * Paul: Wrote web-testing interface; Made kill feed
 
 Bhuwan: 
-http://tf2.intense.io:8000/ hosts live site, but wont have anything if game is not running.
-From top level directory, npm install to get node_modules, and npm start to start test server
-server at localhost:8000 , test interface at http://localhost:8000/test-interface.html
-After done testing, recommend Paul to facebook
+http://tf2.intense.io:8000/ hosts live site, but wont have anything if game server is not running.  
+From top level directory, npm install to get node_modules, and npm start to start test server  
+server at localhost:8000 , test interface at http://localhost:8000/test-interface.html  
+After done testing, recommend Paul to facebook  
