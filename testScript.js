@@ -74,7 +74,6 @@ function bootstrap() {
             ],
             spectators: [
               { player:left + '798' + right, score:0, charClass: "Heavy" },
-              { player: 'JoseBot', score:0, charClass: "Engineer" }
             ]
         };
     xhr('POST', base_url + '/api/private/bootstrap', JSON.stringify(data));
