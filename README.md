@@ -35,6 +35,8 @@ Sample videos:
 [How to test](https://drive.google.com/file/d/0Bw6EJN31sy-RTG5tVTh3U1FraTA/view?usp=sharing)
 server info is sent to defined as base_url in testScript.js
 
+[Live from steam](https://drive.google.com/file/d/0Bw6EJN31sy-RQzRaVTNxeWhPMU0/view?usp=sharing) (eric take down when you put yours up)
+
 (Live video stream from game)(link when ready)
 
 Technologies used:
