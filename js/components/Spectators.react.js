@@ -12,7 +12,7 @@ var Spectators = React.createClass({
       list = list.substring(0, list.length - 2);
     }
 
-    return (<div className="alert alert-info"><span>{list}</span></div>);
+    return (<div className="alert alert-info">Spectators: <span>{list}</span></div>);
   }
 });
 
