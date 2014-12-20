@@ -19,7 +19,7 @@ var TeamMemberTable = React.createClass({
               <th>Name</th>
               <th></th>
               <th>Class</th>
-              <th>Score</th>
+              <th className="playerScoreHeaderCol">Score</th>
             </tr>
           </thead>
           <tbody>

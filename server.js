@@ -201,8 +201,12 @@ app.post('/api/private/death', function(req, res) {
 	   _errors.push("Assister belongs to unknown team.");
   }
 
+<<<<<<< HEAD
 /*
   if (Steam.areValidID3s([b.victim, b.attacker, b.assister])) {
+=======
+  if (Steam.areValidID3s([b.victim, b.attacker])) {
+>>>>>>> 508c9d2986a480c66fbf6e572fd0228e522cf444
     b.victim = Steam.convertID3ToID64(b.victim);
     b.attacker = Steam.convertID3ToID64(b.attacker);
 

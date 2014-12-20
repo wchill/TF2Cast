@@ -12,7 +12,7 @@ var TeamOverview = React.createClass({
         <div className="row">
         <div className="col-md-4"><h3>{name}</h3></div>
         <div className="col-md-4"><h3>{playerCount} players</h3></div>
-        <div className="col-md-4"><h3>{this.props.team.score}</h3></div>
+        <div className="col-md-4 teamScore"><h3>{this.props.team.score}</h3></div>
         </div>
       </div>
     );

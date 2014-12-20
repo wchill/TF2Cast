@@ -47,3 +47,15 @@ body {
 .blueTeam {
   color: blue;
 }
+
+.playerScoreCol {
+    text-align: center;
+}
+
+.playerScoreHeaderCol {
+    text-align: center;
+}
+
+.teamScore {
+    text-align: right;
+}
