@@ -12,8 +12,8 @@ var Messages = React.createClass({
         data.victim = TeamStore.getPlayerName(data.victim);
 
         // Correctly color kills, suicides, and fratricide
-        var attacker_color = data.attacker_team === Constants.RED ? 'redTeam' : 'blueTeam';
-        var victim_color = data.victim_team === Constants.RED ? 'redTeam' : 'blueTeam';
+        var attacker_color = +data.attacker_team === Constants.RED ? 'redTeam' : 'blueTeam';
+        var victim_color = +data.victim_team === Constants.RED ? 'redTeam' : 'blueTeam';
 
         return (<li key={message.id}>
           <span className={attacker_color}>{data.attacker}</span>
