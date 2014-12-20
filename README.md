@@ -29,3 +29,26 @@ Example testing flow:
 * score update  
 * disconnect  
 * round over
+
+Sample videos:
+
+[How to test](https://drive.google.com/file/d/0Bw6EJN31sy-RTG5tVTh3U1FraTA/view?usp=sharing)
+server info is sent to defined as base_url in testScript.js
+
+(Live video stream from game)(link when ready)
+
+Technologies used:
+
+* React
+* Flux
+* Sockets
+* SourceMod
+* Steam api
+* javascript
+
+Contributions:
+
+* Eric: wrote plugin that goes into the game server and sends requests to the node server; hosted servers; designed project
+* Michael: Found images on internet to represent classes
+* Josh: Wrote scoreboard (components, actions, constants, team store, etc)
+* Paul: Wrote web-testing interface; Made kill feed
