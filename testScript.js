@@ -48,7 +48,8 @@ function xhr(type, url, data) {
   }
 }
 
-var base_url = "http://tf2.intense.io:8000"
+//var base_url = "http://tf2.intense.io:8000"
+var base_url = "http://localhost:8000";
 
 
 // change names to '[U:1:XXXXXX]'

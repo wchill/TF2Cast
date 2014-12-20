@@ -355,6 +355,7 @@ app.post('/api/private/roundover', function(req, res) {
   if (!_errors.length) {
     updateTeamScore(Constants.RED, b.red_score);
     updateTeamScore(Constants.BLU, b.blu_score);
+    io.emit('message_from_server', {text: 'Round over', id: 398});
   }
 
   res.json(_errors);
