@@ -254,7 +254,7 @@ app.post('/api/private/connected', function(req, res) {
   var _errors = [];
 
   if (!_errors.length) {
-    addPlayersToTeam([{player: b.player}], b.team);
+    addPlayersToTeam([{player: b.player}], +b.team);
   }
 
   res.json(_errors);
@@ -305,7 +305,7 @@ app.post('/api/private/teamswitch', function(req, res) {
   }
 
   if (!_errors.length) {
-    _players[b.player].team = b.team;
+    _players[b.player].team = +b.team;
     io.emit('player_update', _players[b.player]);
   }
 
