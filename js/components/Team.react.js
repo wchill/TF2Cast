@@ -8,7 +8,9 @@ var Team = React.createClass({
     return (
       <div className="panel">
         <TeamOverview team={this.props.team} />
-        <TeamMemberTable players={this.props.team.players} />
+        <TeamMemberTable players={this.props.team.players.sort(function(a, b) {
+            return b.score - a.score;
+        })} />
       </div>
     );
   }
