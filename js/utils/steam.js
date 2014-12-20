@@ -22,13 +22,14 @@ var Steam = {
   },
 
   areValidID3s: function(id3s) {
+    var valid = true;
     id3s.forEach(function(id3) {
       if (!isValidID3(id3)) {
-        return false;
+        valid = false;
       }
     });
 
-    return true;
+    return valid;
   },
 
   // Used to retrieve a player's persona name and their avatar
