@@ -28,9 +28,10 @@ public OnPluginStart() {
 }
 
 public Action:Command_Bootstrap(client, args) {
+    PrintToServer("Bootstrapping Node");
     decl String:url[255];
     decl String:endpoint[] = "bootstrap";
-    Format(url, sizeof(url), "http://tf2.intense.io/api/private/%s", endpoint);
+    Format(url, sizeof(url), "http://tf2.intense.io:8000/api/private/%s", endpoint);
     new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, url);
 
     decl String:mapname[64];
@@ -60,20 +61,45 @@ public Action:Command_Bootstrap(client, args) {
     new Handle:bluteam = json_array();
     new Handle:specteam = json_array();
 
-    for(new i = 1; i < MaxClients; i++) {
+    for(new i = 1; i <= MaxClients; i++) {
         if(!Client_MatchesFilter(i, CLIENTFILTER_INGAME)) {
             continue;
         }
         new Handle:player = json_object();
-        decl String:networkid[64];
-        GetClientAuthId(i, AuthId_SteamID64, networkid, sizeof(networkid));
-        if(StrEqual(networkid, "BOT")) {
-            decl String:playername[64];
-            GetClientName(i, playername, sizeof(playername));
-            strcopy(networkid, sizeof(networkid), playername);
+        new String:networkid[64];
+        GetClientAuthId(i, AuthId_Steam3, networkid, sizeof(networkid));
+        if(strlen(networkid) < 7) {
+            Format(networkid, sizeof(networkid), "%N", i);
+        }
+        decl String:classname[64];
+        new TFClassType:class = TF2_GetPlayerClass(i);
+        if(class == TFClass_Scout) {
+            strcopy(classname, sizeof(classname), "Scout");
+        } else if(class == TFClass_Sniper) {
+            strcopy(classname, sizeof(classname), "Sniper");
+        } else if(class == TFClass_Soldier) {
+            strcopy(classname, sizeof(classname), "Soldier");
+        } else if(class == TFClass_DemoMan) {
+            strcopy(classname, sizeof(classname), "Demoman");
+        } else if(class == TFClass_Medic) {
+            strcopy(classname, sizeof(classname), "Medic");
+        } else if(class == TFClass_Heavy) {
+            strcopy(classname, sizeof(classname), "Heavy");
+        } else if(class == TFClass_Pyro) {
+            strcopy(classname, sizeof(classname), "Pyro");
+        } else if(class == TFClass_Spy) {
+            strcopy(classname, sizeof(classname), "Spy");
+        } else if(class == TFClass_Engineer) {
+            strcopy(classname, sizeof(classname), "Engineer");
+        } else {
+            strcopy(classname, sizeof(classname), "Unknown");
         }
         json_object_set_new(player, "player", json_string(networkid));
         json_object_set_new(player, "score", json_integer(GetEntData(resourceent, offset + (i * 4), 4)));
+        json_object_set_new(player, "charClass", json_string(classname));
+        decl String:playerjson[4096];
+        json_dump(player, playerjson, sizeof(playerjson));
+        PrintToServer(playerjson);
         new team = GetClientTeam(i);
         if(team == 1) {
             json_array_append_new(specteam, player);
@@ -81,11 +107,13 @@ public Action:Command_Bootstrap(client, args) {
             json_array_append_new(redteam, player);
         } else if(team == 3) {
             json_array_append_new(bluteam, player);
+        } else {
+            CloseHandle(player);
         }
     }
-    new String:redjson[2048];
-    new String:blujson[2048];
-    new String:specjson[2048];
+    new String:redjson[4096];
+    new String:blujson[4096];
+    new String:specjson[4096];
     json_dump(redteam, redjson, sizeof(redjson));
     json_dump(bluteam, blujson, sizeof(blujson));
     json_dump(specteam, specjson, sizeof(specjson));
@@ -94,23 +122,26 @@ public Action:Command_Bootstrap(client, args) {
     Steam_SetHTTPRequestGetOrPostParameter(request, "blu_players", blujson);
     Steam_SetHTTPRequestGetOrPostParameter(request, "spectators", specjson);
     Steam_SendHTTPRequest(request, OnRequestComplete); // Send the request
-}
-
-public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast) {
-    PrintToServer("[DEBUG] Round has started");
-    PrintToChatAll("[DEBUG] Round has started");
-    Command_Bootstrap(0, 0);
+    CloseHandle(redteam);
+    CloseHandle(bluteam);
+    CloseHandle(specteam);
     if(!isTimerRunning) {
         isTimerRunning = 1;
         CreateTimer(5.0, Timer_UpdateScores, _, TIMER_REPEAT);
     }
 }
 
+public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast) {
+    PrintToServer("[DEBUG] Round has started");
+    PrintToChatAll("[DEBUG] Round has started");
+    Command_Bootstrap(0, 0);
+}
+
 public Action:Timer_UpdateScores(Handle:timer) {
     if(!isTimerRunning) return Plugin_Stop;
     decl String:url[255];
     decl String:endpoint[] = "playerscores";
-    Format(url, sizeof(url), "http://tf2.intense.io/api/private/%s", endpoint);
+    Format(url, sizeof(url), "http://tf2.intense.io:8000/api/private/%s", endpoint);
     new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, url);
 
     new offset = FindSendPropOffs("CTFPlayerResource", "m_iTotalScore");
@@ -120,17 +151,15 @@ public Action:Timer_UpdateScores(Handle:timer) {
     new Handle:bluteam = json_array();
     new Handle:specteam = json_array();
 
-    for(new client = 1; client < MaxClients; client++) {
+    for(new client = 1; client <= MaxClients; client++) {
         if(!Client_MatchesFilter(client, CLIENTFILTER_INGAME)) {
             continue;
         }
         new Handle:player = json_object();
-        decl String:networkid[64];
-        GetClientAuthId(client, AuthId_SteamID64, networkid, sizeof(networkid));
-        if(StrEqual(networkid, "BOT")) {
-            decl String:playername[64];
-            GetClientName(client, playername, sizeof(playername));
-            strcopy(networkid, sizeof(networkid), playername);
+        new String:networkid[64];
+        GetClientAuthId(client, AuthId_Steam3, networkid, sizeof(networkid));
+        if(strlen(networkid) < 7) {
+            Format(networkid, sizeof(networkid), "%N", client);
         }
         decl String:classname[64];
         new TFClassType:class = TF2_GetPlayerClass(client);
@@ -178,14 +207,17 @@ public Action:Timer_UpdateScores(Handle:timer) {
     Steam_SetHTTPRequestGetOrPostParameter(request, "blu_players", blujson);
     Steam_SetHTTPRequestGetOrPostParameter(request, "spectators", specjson);
     Steam_SendHTTPRequest(request, OnRequestComplete); // Send the request
+    CloseHandle(redteam);
+    CloseHandle(bluteam);
+    CloseHandle(specteam);
     return Plugin_Continue;
 }
 
 public OnClientPostAdminCheck(client) {
     decl String:networkid[64];
-    GetClientAuthId(client, AuthId_SteamID64, networkid, sizeof(networkid));
+    GetClientAuthId(client, AuthId_Steam3, networkid, sizeof(networkid));
     decl String:playername[64];
-    GetClientName(client, playername, sizeof(playername));
+    Format(playername, sizeof(playername), "%N", client);
     PrintToServer("[DEBUG] Player %s connected (%s)", playername, networkid);
     PrintToChatAll("[DEBUG] Player %s connected (%s)", playername, networkid);
 
@@ -231,19 +263,20 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
     new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, url); // Create the HTTP request
 
     decl String:victimnetworkid[64];
-    GetClientAuthId(victimid, AuthId_SteamID64, victimnetworkid, sizeof(victimnetworkid));
+    GetClientAuthId(victimid, AuthId_Steam3, victimnetworkid, sizeof(victimnetworkid));
 
     decl String:attackernetworkid[64];
-    GetClientAuthId(attackerid, AuthId_SteamID64, attackernetworkid, sizeof(attackernetworkid));
+    GetClientAuthId(attackerid, AuthId_Steam3, attackernetworkid, sizeof(attackernetworkid));
 
     decl String:assisternetworkid[64];
     if(assisterid != -1) {
-        GetClientAuthId(assisterid, AuthId_SteamID64, assisternetworkid, sizeof(assisternetworkid));
+        GetClientAuthId(assisterid, AuthId_Steam3, assisternetworkid, sizeof(assisternetworkid));
     } else {
         GetEventString(event, "assister_fallback", assisternetworkid, sizeof(assisternetworkid));
     }
 
-    if(StrEqual(victimnetworkid, "BOT")) {
+    //PrintToServer("Victim (%s)(%s)(%d)", victim, victimnetworkid, victimid);
+    if(strlen(victimnetworkid) < 7) {
         // bots don't have a Steam ID, so just send their name
         Steam_SetHTTPRequestGetOrPostParameter(request, "victim", victim);
     } else {
@@ -251,7 +284,7 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
         Steam_SetHTTPRequestGetOrPostParameter(request, "victim", victimnetworkid);
     }
 
-    if(StrEqual(attackernetworkid, "BOT")) {
+    if(strlen(attackernetworkid) < 7) {
         // bots don't have a Steam ID, so just send their name
         Steam_SetHTTPRequestGetOrPostParameter(request, "attacker", attacker);
     } else {
@@ -259,21 +292,21 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
         Steam_SetHTTPRequestGetOrPostParameter(request, "attacker", attackernetworkid);
     }
 
-    if(StrEqual(assisternetworkid, "BOT")) {
+    if(strlen(assisternetworkid) < 7) {
         // bots don't have a Steam ID, so just send their name
         Steam_SetHTTPRequestGetOrPostParameter(request, "assister", assister);
     } else {
         // Send the player's Steam ID
-        Steam_SetHTTPRequestGetOrPostParameter(request, "assister", attackernetworkid);
+        Steam_SetHTTPRequestGetOrPostParameter(request, "assister", assisternetworkid);
     }
 
     decl String:tmp1[4];
-    Format(tmp1, sizeof(tmp1), "%d", GetClientTeam(victimid));
+    Format(tmp1, sizeof(tmp1), "%d", GetClientTeam(victimid) - 2);
     decl String:tmp2[4];
-    Format(tmp2, sizeof(tmp2), "%d", GetClientTeam(attackerid));
+    Format(tmp2, sizeof(tmp2), "%d", GetClientTeam(attackerid) - 2);
     decl String:tmp3[4];
     if(assisterid != -1) {
-        Format(tmp3, sizeof(tmp3), "%d", GetClientTeam(assisterid));
+        Format(tmp3, sizeof(tmp3), "%d", GetClientTeam(assisterid) - 2);
     } else {
         tmp3[0] = 0;
     }
@@ -290,7 +323,7 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 public Action:Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast) {
     decl String:playername[64];
     new playerid = GetEventInt(event, "userid");
-    new teamid = GetEventInt(event, "team");
+    new teamid = GetEventInt(event, "team") - 2;
     new classid = GetEventInt(event, "class");
     GetClientName(GetClientOfUserId(playerid), playername, sizeof(playername));
     PrintToServer("[DEBUG] Player %s respawned on team %d as class %d", playername, teamid, classid);
@@ -321,13 +354,13 @@ public Action:Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroa
 
     decl String:networkid[64];
     new clientid = GetClientOfUserId(playerid);
-    GetClientAuthId(clientid, AuthId_SteamID64, networkid, sizeof(networkid));
+    GetClientAuthId(clientid, AuthId_Steam3, networkid, sizeof(networkid));
 
     decl String:url[255];
     decl String:endpoint[] = "respawn";
     Format(url, sizeof(url), "http://tf2.intense.io:8000/api/private/%s", endpoint);
     new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, url); // Create the HTTP request
-    if(StrEqual(networkid, "BOT")) {
+    if(strlen(networkid) < 7) {
         // bots don't have a Steam ID, so just send their name
         Steam_SetHTTPRequestGetOrPostParameter(request, "player", playername);
     } else {
@@ -337,7 +370,7 @@ public Action:Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroa
     decl String:tmp[4];
     Format(tmp, sizeof(tmp), "%d", teamid);
     Steam_SetHTTPRequestGetOrPostParameter(request, "team", tmp);
-    Steam_SetHTTPRequestGetOrPostParameter(request, "class", classname); 
+    Steam_SetHTTPRequestGetOrPostParameter(request, "charClass", classname); 
     Steam_SendHTTPRequest(request, OnRequestComplete); // Send the request
 }
 
@@ -347,7 +380,7 @@ public Action:Event_PlayerChangeClass(Handle:event, const String:name[], bool:do
     new clientid = GetClientOfUserId(playerid);
     GetClientName(clientid, playername, sizeof(playername));
     decl String:networkid[64];
-    GetClientAuthId(clientid, AuthId_SteamID64, networkid, sizeof(networkid));
+    GetClientAuthId(clientid, AuthId_Steam3, networkid, sizeof(networkid));
     new class = GetEventInt(event, "class");
     decl String:classname[64];
     if(class == 1) {
@@ -383,7 +416,7 @@ public Action:Event_PlayerChangeClass(Handle:event, const String:name[], bool:do
     } else {
         Steam_SetHTTPRequestGetOrPostParameter(request, "player", playername);
     }
-    Steam_SetHTTPRequestGetOrPostParameter(request, "class", classname);
+    Steam_SetHTTPRequestGetOrPostParameter(request, "charClass", classname);
     Steam_SetHTTPRequestGetOrPostParameter(request, "team", "-1");
 //    Steam_SendHTTPRequest(request, OnRequestComplete); // Send the request
 }
@@ -393,7 +426,7 @@ public Action:Event_PlayerDisconnect(Handle:event, const String:name[], bool:don
     decl String:networkid[64];
     GetEventString(event, "name", playername, sizeof(playername));
     new clientid = GetClientOfUserId(GetEventInt(event, "userid"));
-    GetClientAuthId(clientid, AuthId_SteamID64, networkid, sizeof(networkid));
+    GetClientAuthId(clientid, AuthId_Steam3, networkid, sizeof(networkid));
     new bot = GetEventInt(event, "bot"); 
     PrintToServer("[DEBUG] Player %s disconnected (%s, %d)", playername, networkid, bot);
     PrintToChatAll("[DEBUG] Player %s disconnected (%s, %d)", playername, networkid, bot);
@@ -433,7 +466,7 @@ public Action:Event_PlayerChangeTeam(Handle:event, const String:name[], bool:don
 
     decl String:networkid[64];
     new clientid = GetClientOfUserId(playerid);
-    GetClientAuthId(clientid, AuthId_SteamID64, networkid, sizeof(networkid));
+    GetClientAuthId(clientid, AuthId_Steam3, networkid, sizeof(networkid));
 
     decl String:url[255];
     decl String:endpoint[] = "teamswitch";

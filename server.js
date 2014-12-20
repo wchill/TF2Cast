@@ -44,6 +44,10 @@ var resetScoreboard = function() {
 
 // Validates a team ID
 var isValidTeam = function(teamid) {
+  if(typeof teamid == 'string' || teamid instanceof String) {
+    if(teamid.length != 1) return false;
+    teamid = parseInt(teamid);
+  }
   return Constants.VALID_TEAM.indexOf(teamid) > -1;
 };
 
@@ -85,7 +89,8 @@ var updatePlayerSteamData = function (player, steam) {
 // Add each player to the associated team while making sure
 // to retrieve the appropriate Steam information, etc.
 var addPlayersToTeam = function(players, teamid) {
-  players.forEach(function(player) {
+  if(typeof players == 'string' || players instanceof String) {
+    players = JSON.parse(players); } players.forEach(function(player) {
     var playerID3 = player.player; // Steam ID in ID3 format (or bot name)
 
     convertPlayerId(player);
@@ -196,6 +201,7 @@ app.post('/api/private/death', function(req, res) {
 	   _errors.push("Assister belongs to unknown team.");
   }
 
+/*
   if (Steam.areValidID3s([b.victim, b.attacker, b.assister])) {
     b.victim = Steam.convertID3ToID64(b.victim);
     b.attacker = Steam.convertID3ToID64(b.attacker);
@@ -204,6 +210,11 @@ app.post('/api/private/death', function(req, res) {
       b.assister = Steam.convertID3ToID64(b.assister);
     }
   }
+  */
+
+  if(Steam.isValidID3(b.victim)) b.victim = Steam.convertID3ToID64(b.victim);
+  if(Steam.isValidID3(b.attacker)) b.attacker= Steam.convertID3ToID64(b.attacker);
+  if(b.assister && Steam.isValidID3(b.assister)) b.assister = Steam.convertID3ToID64(b.assister);
 
   if(!_errors.length) {
     _players[b.victim].alive = false;
@@ -218,6 +229,7 @@ app.post('/api/private/death', function(req, res) {
 
 app.post('/api/private/respawn', function(req, res) {
   console.log('POST /api/private/respawn');
+  console.log(req.body);
 
   var b = req.body;
   var _errors = [];
@@ -237,6 +249,7 @@ app.post('/api/private/respawn', function(req, res) {
   if (!_errors.length) {
     _players[b.player].alive = true;
     _players[b.player].charClass = b.charClass;
+    console.log(_players[b.player])
 
     io.emit('player_update', _players[b.player]);
   }
@@ -314,6 +327,11 @@ app.post('/api/private/playerscores', function(req, res) {
 
   var b = req.body;
   var _errors = [];
+
+  if(typeof b.red_players == 'string' || b.red_players instanceof String) {
+    b.red_players = JSON.parse(b.red_players);
+    b.blu_players = JSON.parse(b.blu_players);
+  }
 
   b.red_players.forEach(convertPlayerId);
   b.red_players.forEach(updatePlayerScore);
