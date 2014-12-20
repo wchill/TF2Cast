@@ -13,7 +13,6 @@ var isValidID3 = function (id3) {
 var Steam = {
   // Convert from Steam's ID3 format to the newer ID64
   convertID3ToID64: function (id3) {
-    console.log("Converting to id64: " + id3);
     var modifier = id3.substring(5, id3.length-1);
     return _ID64_BASE.add(modifier).toString();
   },

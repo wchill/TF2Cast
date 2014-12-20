@@ -488,7 +488,7 @@ public Action:Event_PlayerChangeTeam(Handle:event, const String:name[], bool:don
 public Action:Event_RoundOver(Handle:event, const String:name[], bool:dontBroadcast) {
     decl String:url[255];
     decl String:endpoint[] = "roundover";
-    Format(url, sizeof(url), "http://tf2.intense.io/api/private/%s", endpoint);
+    Format(url, sizeof(url), "http://tf2.intense.io:8000/api/private/%s", endpoint);
     new HTTPRequestHandle:request = Steam_CreateHTTPRequest(HTTPMethod_POST, url);
 
     new winner = GetEventInt(event, "team") - 2;
@@ -499,12 +499,12 @@ public Action:Event_RoundOver(Handle:event, const String:name[], bool:dontBroadc
     new redteamscore = GetTeamScore(2);
     decl String:redscorestr[32];
     Format(redscorestr, sizeof(redscorestr), "%d", redteamscore);
-    Steam_SetHTTPRequestGetOrPostParameter(request, "red_wins", redscorestr);
+    Steam_SetHTTPRequestGetOrPostParameter(request, "red_score", redscorestr);
 
     new bluteamscore = GetTeamScore(3);
     decl String:bluscorestr[32];
     Format(bluscorestr, sizeof(bluscorestr), "%d", bluteamscore);
-    Steam_SetHTTPRequestGetOrPostParameter(request, "blu_wins", bluscorestr);
+    Steam_SetHTTPRequestGetOrPostParameter(request, "blu_score", bluscorestr);
     Steam_SendHTTPRequest(request, OnRequestComplete);
 }
 

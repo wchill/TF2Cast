@@ -219,7 +219,6 @@ app.post('/api/private/death', function(req, res) {
 
 app.post('/api/private/respawn', function(req, res) {
   console.log('POST /api/private/respawn');
-  console.log(req.body);
 
   var b = req.body;
   var _errors = [];
@@ -239,7 +238,6 @@ app.post('/api/private/respawn', function(req, res) {
   if (!_errors.length) {
     _players[b.player].alive = true;
     _players[b.player].charClass = b.charClass;
-    console.log(_players[b.player])
 
     io.emit('player_update', _players[b.player]);
   }
@@ -337,6 +335,9 @@ app.post('/api/private/roundover', function(req, res) {
 
   var b = req.body;
   var _errors = [];
+
+  b.red_score = +b.red_score;
+  b.blu_score = +b.blu_score;
 
   var _red_score = b.red_score || -1;
   if (_red_score < 0) {
