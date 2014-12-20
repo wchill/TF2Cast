@@ -52,3 +52,9 @@ Contributions:
 * Michael: Found images on internet to represent classes
 * Josh: Wrote scoreboard (components, actions, constants, team store, etc)
 * Paul: Wrote web-testing interface; Made kill feed
+
+Bhuwan: 
+http://tf2.intense.io:8000/ hosts live site, but wont have anything if game is not running.
+From top level directory, npm install to get node_modules, and npm start to start test server
+server at localhost:8000 , test interface at http://localhost:8000/test-interface.html
+After done testing, recommend Paul to facebook
