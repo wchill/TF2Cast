@@ -1,6 +1,8 @@
 var bignum = require('browserify-bignum');
 
-var _API_KEY = '8FB18602A84F393E886D7E47F8FCF2D1';
+// Get an API key from here
+// http://steamcommunity.com/dev/apikey
+var _API_KEY = 'Replace with your own Steam API Key';
 var _ID64_BASE = bignum('76561197960265728');
 var _ID3_RE = /^\[U:1:([\d]+)\]$/;
 
